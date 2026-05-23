@@ -1,107 +1,207 @@
+import { extract } from "@extractus/oembed-extractor";
 import { getLinkPreview } from "link-preview-js";
 
-export function parseMediaUrl(url: string): { type: "image" | "video" | "react-player" | "iframe" | "link"; mediaUrl: string; provider?: string } {
-  const lowercaseUrl = url.toLowerCase();
+// Professional tools use specific headers to avoid being blocked by social platforms
+const BROWSER_HEADERS = {
+	"user-agent":
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+	accept:
+		"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+};
 
-  if (/\.(jpg|jpeg|gif|png|webp|bmp)(\?.*)?$/i.test(lowercaseUrl)) {
-    return { type: "image", mediaUrl: url };
-  }
+/**
+ * Standardizes URL parsing using provider-specific regex patterns
+ * similar to those used in major open-source media player libraries.
+ */
+export function parseMediaUrl(url: string): {
+	type: "image" | "video" | "react-player" | "iframe" | "link";
+	mediaUrl: string;
+	provider?: string;
+} {
+	const lowercaseUrl = url.toLowerCase();
 
-  if (/\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(lowercaseUrl)) {
-    return { type: "video", mediaUrl: url };
-  }
+	// 1. Direct Static Assets
+	if (/\.(jpg|jpeg|gif|png|webp|bmp)(\?.*)?$/i.test(lowercaseUrl)) {
+		return { type: "image", mediaUrl: url };
+	}
+	if (/\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(lowercaseUrl)) {
+		return { type: "video", mediaUrl: url };
+	}
 
-  const ytRegex = /(?:youtube(?:-nocookie|-education)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|watch\?v=|shorts\/)|youtu\.be\/)([^"&?\s]{11})/i;
-  const ytMatch = url.match(ytRegex);
-  if (ytMatch && ytMatch[1]) {
-    return { type: "react-player", mediaUrl: `https://www.youtube.com/watch?v=${ytMatch[1]}`, provider: "youtube" };
-  }
+	// 2. YouTube & Shorts (Handled best by ReactPlayer)
+	const ytRegex =
+		/(?:youtube(?:-nocookie|-education)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|watch\?v=|shorts\/)|youtu\.be\/)([^"&?\s]{11})/i;
+	const ytMatch = url.match(ytRegex);
+	if (ytMatch?.[1]) {
+		return {
+			type: "react-player",
+			mediaUrl: `https://www.youtube.com/watch?v=${ytMatch[1]}`,
+			provider: "youtube",
+		};
+	}
 
-  const ttRegex = /tiktok\.com\/@[^\/]+\/video\/(\d+)/i;
-  const ttMatch = url.match(ttRegex);
-  if (ttMatch && ttMatch[1]) {
-    return { type: "iframe", mediaUrl: `https://www.tiktok.com/embed/v2/${ttMatch[1]}`, provider: "tiktok" };
-  } else if (lowercaseUrl.includes("tiktok.com")) {
-    return { type: "link", mediaUrl: url, provider: "tiktok" };
-  }
+	// 3. TikTok - Standard Embed Path
+	const ttRegex = /tiktok\.com\/@[^\/]+\/video\/(\d+)/i;
+	const ttMatch = url.match(ttRegex);
+	if (ttMatch?.[1]) {
+		return {
+			type: "iframe",
+			mediaUrl: `https://www.tiktok.com/embed/v2/${ttMatch[1]}`,
+			provider: "tiktok",
+		};
+	}
 
-  const igRegex = /instagram\.com\/(?:p|reels|reel)\/([a-zA-Z0-9_-]+)/i;
-  const igMatch = url.match(igRegex);
-  if (igMatch && igMatch[1]) {
-    return { type: "iframe", mediaUrl: `https://www.instagram.com/p/${igMatch[1]}/embed`, provider: "instagram" };
-  } else if (lowercaseUrl.includes("instagram.com")) {
-    return { type: "link", mediaUrl: url, provider: "instagram" };
-  }
+	// 4. Instagram (Posts & Reels) - Standard Embed Path
+	const igRegex = /instagram\.com\/(?:p|reels|reel)\/([a-zA-Z0-9_-]+)/i;
+	const igMatch = url.match(igRegex);
+	if (igMatch?.[1]) {
+		const isReel =
+			lowercaseUrl.includes("/reel/") || lowercaseUrl.includes("/reels/");
+		return {
+			type: "iframe",
+			mediaUrl: `https://www.instagram.com/${isReel ? "reel" : "p"}/${igMatch[1]}/embed`,
+			provider: "instagram",
+		};
+	}
 
-  const twitchClipRegex = /(?:clips\.twitch\.tv\/|twitch\.tv\/\w+\/clip\/)([a-zA-Z0-9_-]+)/i;
-  const clipMatch = url.match(twitchClipRegex);
-  if (clipMatch && clipMatch[1]) {
-    return { type: "iframe", mediaUrl: `https://clips.twitch.tv/embed?clip=${clipMatch[1]}`, provider: "twitch" };
-  }
+	// 5. Twitch Clips
+	const twitchClipRegex =
+		/(?:clips\.twitch\.tv\/|twitch\.tv\/\w+\/clip\/)([a-zA-Z0-9_-]+)/i;
+	const clipMatch = url.match(twitchClipRegex);
+	if (clipMatch?.[1]) {
+		return {
+			type: "iframe",
+			mediaUrl: `https://clips.twitch.tv/embed?clip=${clipMatch[1]}`,
+			provider: "twitch",
+		};
+	}
 
-  let providerDefault = "general";
-  if (lowercaseUrl.includes("twitter.com") || lowercaseUrl.includes("x.com")) providerDefault = "twitter";
-  if (lowercaseUrl.includes("twitch.tv")) providerDefault = "twitch";
-  if (lowercaseUrl.includes("facebook.com")) providerDefault = "facebook";
+	// Generic Link
+	let provider = "link";
+	if (lowercaseUrl.includes("twitter.com") || lowercaseUrl.includes("x.com"))
+		provider = "twitter";
+	if (lowercaseUrl.includes("facebook.com")) provider = "facebook";
 
-  return { type: "link", mediaUrl: url, provider: providerDefault };
+	return { type: "link", mediaUrl: url, provider };
 }
 
-export async function resolveMediaFromLink(url: string): Promise<{ type: "image" | "video" | "react-player" | "iframe" | "link"; mediaUrl: string; title?: string }> {
-  if (url.toLowerCase().includes("tiktok.com")) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-      const resp = await fetch(`https://tikwm.com/api/?url=${url}`, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      const json = await resp.json();
-      if (json && json.data && json.data.play) {
-        return { type: "video", mediaUrl: json.data.play, title: json.data.title || "TikTok Video" };
-      }
-    } catch (err) {
-      console.warn("⚠️ tikwm TikTok API timeout/failure, dropping to fallback.");
-    }
-  }
+/**
+ * Resolves media metadata using OEmbed (standard) with fallbacks.
+ * This mimics the logic used by Streamlabs and other major alert tools.
+ */
+export async function resolveMediaFromLink(url: string): Promise<{
+	type: "image" | "video" | "react-player" | "iframe" | "link";
+	mediaUrl: string;
+	title?: string;
+	duration?: number;
+	provider?: string;
+}> {
+	// First, do a quick parse for known patterns
+	const quick = parseMediaUrl(url);
 
-  const quick = parseMediaUrl(url);
-  if (quick.type === "react-player" || quick.type === "iframe") {
-    return { ...quick, title: "" };
-  }
+	// If it's a direct image or video, return immediately
+	if (quick.type === "image" || quick.type === "video") {
+		return { ...quick, title: "" };
+	}
 
-  try {
-    const preview = await getLinkPreview(url, {
-      timeout: 3000,
-      followRedirects: "follow",
-      headers: {
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
-      }
-    }) as any;
+	// If it's a known embed provider (YT, IG, TT), try to get rich metadata but keep the embed URL
+	try {
+		const oembed = (await extract(url, undefined, {
+			headers: BROWSER_HEADERS,
+		})) as any;
+		if (oembed) {
+			// If it's YouTube, we prefer ReactPlayer for better control
+			if (oembed.provider_name?.toLowerCase() === "youtube") {
+				return {
+					type: "react-player",
+					mediaUrl: url,
+					provider: "youtube",
+					title: oembed.title || "",
+				};
+			}
 
-    if (preview) {
-      const contentType = (preview.contentType || "").toLowerCase();
-      const mediaType = (preview.mediaType || "").toLowerCase();
+			// For others, if we have an iframe in the oembed response, extract the src
+			const iframeMatch = oembed.html?.match(
+				/<iframe[^>]+src=["']([^"']+)["']/i,
+			);
+			if (iframeMatch?.[1]) {
+				let mediaUrl = iframeMatch[1];
+				// Add autoplay/mute hints for common providers if not present
+				if (
+					mediaUrl.includes("instagram.com") &&
+					!mediaUrl.includes("autoplay")
+				) {
+					mediaUrl +=
+						(mediaUrl.includes("?") ? "&" : "?") + "autoplay=true&muted=1";
+				}
+				return {
+					type: "iframe",
+					mediaUrl,
+					provider: oembed.provider_name?.toLowerCase() || quick.provider,
+					title: oembed.title || "",
+					duration: oembed.duration ? oembed.duration * 1000 : undefined,
+				};
+			}
 
-      if (contentType.startsWith("image/") || mediaType === "image" || mediaType === "image.generic") {
-        return { type: "image", mediaUrl: preview.url || url, title: preview.title || "" };
-      }
-      if (contentType.startsWith("video/") || mediaType === "video" || mediaType === "video.other") {
-        return { type: "video", mediaUrl: preview.url || url, title: preview.title || "" };
-      }
+			// Special case for TikTok oembed which doesn't always use an iframe in the response
+			if (oembed.provider_name?.toLowerCase() === "tiktok" && quick.mediaUrl) {
+				return {
+					type: "iframe",
+					mediaUrl: quick.mediaUrl,
+					provider: "tiktok",
+					title: oembed.title || "",
+				};
+			}
+		}
+	} catch (err) {
+		// Log OEmbed failure but continue to fallback
+		console.log(`ℹ️ OEmbed extraction skipped or failed for ${url}`);
+	}
 
-      if (preview.images && preview.images.length > 0) {
-        return { type: "image", mediaUrl: preview.images[0], title: preview.title || "" };
-      }
+	// Fallback 1: Instagram/TikTok specific patterns (most reliable for these)
+	if (quick.provider === "instagram" || quick.provider === "tiktok") {
+		let finalUrl = quick.mediaUrl;
+		if (quick.provider === "instagram" && !finalUrl.includes("autoplay")) {
+			finalUrl +=
+				(finalUrl.includes("?") ? "&" : "?") + "autoplay=true&muted=1";
+		}
+		return { ...quick, mediaUrl: finalUrl, title: "" };
+	}
 
-      if (preview.videos && preview.videos.length > 0) {
-        const videoSrc = preview.videos[0].url || preview.videos[0];
-        if (typeof videoSrc === "string") {
-          return { type: "video", mediaUrl: videoSrc, title: preview.title || "" };
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("⚠️ link-preview-js retrieval timed out:", url);
-  }
+	// Fallback 2: Link Preview (Scraping)
+	try {
+		const preview = (await getLinkPreview(url, {
+			timeout: 4000,
+			headers: BROWSER_HEADERS,
+			followRedirects: "follow",
+		})) as any;
 
-  return { ...quick, title: "" };
+		if (preview) {
+			if (
+				preview.mediaType === "video" ||
+				preview.contentType?.startsWith("video/")
+			) {
+				return {
+					type: "video",
+					mediaUrl: preview.videos?.[0]?.url || preview.url || url,
+					title: preview.title || "",
+				};
+			}
+			if (
+				preview.mediaType === "image" ||
+				preview.contentType?.startsWith("image/")
+			) {
+				return {
+					type: "image",
+					mediaUrl: preview.images?.[0] || preview.url || url,
+					title: preview.title || "",
+				};
+			}
+		}
+	} catch (err) {
+		console.log(`ℹ️ Link preview fallback timed out for ${url}`);
+	}
+
+	// Final fallback: Return the quick parse result or original URL as a link
+	return { ...quick, title: "" };
 }
