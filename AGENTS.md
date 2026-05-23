@@ -1,6 +1,6 @@
 ## Instructions for AI Agents
 
-This project is a Discord OBS overlay application built with React (Vite) for the frontend and Node.js (Express) for the backend. It integrates with the Google Gemini API and Discord.js.
+This project is a Discord OBS overlay application built with React (Vite) for the frontend and Node.js (Express) for the backend. It integrates with Discord.js.
 
 ### Project Structure
 
@@ -12,7 +12,7 @@ This project is a Discord OBS overlay application built with React (Vite) for th
 ### Setup and Development
 
 1.  **Install Dependencies:** Run `npm install` to install all necessary project dependencies.
-2.  **Environment Variables:** Set the `GEMINI_API_KEY` in a `.env.local` file at the project root.
+2.  **Environment Variables:** Create a `.env.local` file at the project root.
 3.  **Run in Development Mode:** Use `npm run dev` to start the application in development mode. This typically runs the backend using `tsx server.ts` and the frontend via Vite.
 
 ### Build and Deployment
@@ -23,7 +23,7 @@ This project is a Discord OBS overlay application built with React (Vite) for th
 ### Key Technologies
 
 - **Frontend:** React, Vite, Tailwind CSS
-- **Backend:** Node.js, Express, Socket.IO, Discord.js, Google Gemini API
+- **Backend:** Node.js, Express, Socket.IO, Discord.js
 
 ### Further Documentation
 

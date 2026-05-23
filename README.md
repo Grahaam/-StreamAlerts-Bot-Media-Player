@@ -1,86 +1,174 @@
 # Discord OBS Overlay Application
 
-This project is a Discord OBS overlay application designed to display real-time alerts and media within an OBS stream. It features a React (Vite) frontend and a Node.js (Express) backend, with integrations for Google Gemini API and Discord.js.
+A Discord-powered OBS overlay that turns Discord messages into overlay alerts. It supports both prefix commands (`!alert`) and slash commands (`/alert`).
 
 ## Features
 
-- Real-time display of Discord and simulated alerts in OBS.
-- Dynamic media playback and animated alert styles.
-- Automatic vertical sizing of the OBS browser source for optimal content display.
-- Keyboard shortcut support for skipping/stopping active alerts.
-- Media look-ahead preloading engine for smooth transitions.
-
-## Technologies Used
-
-### Frontend
-
-- **React:** A JavaScript library for building user interfaces.
-- **Vite:** A fast frontend build tool.
-- **Tailwind CSS:** A utility-first CSS framework for rapid UI development.
-- **Lucide React:** A collection of beautiful hand-crafted SVG icons.
-- **Motion:** A production-ready animation library for React.
-- **React Player:** A React component for playing a variety of URLs, including file paths, YouTube, Facebook, Twitch, SoundCloud, Streamable, Vimeo, Wistia, DailyMotion, Vidyard, and Custom.
-- **Socket.IO Client:** Client-side library for real-time bidirectional event-based communication.
-
-### Backend
-
-- **Node.js:** A JavaScript runtime built on Chrome's V8 JavaScript engine.
-- **Express:** A fast, unopinionated, minimalist web framework for Node.js.
-- **Socket.IO:** Server-side library for real-time bidirectional event-based communication.
-- **Discord.js:** A powerful Node.js module for interacting with the Discord API.
-- **Google Gemini API:** For integrating AI capabilities.
-- **Dotenv:** Loads environment variables from a `.env` file.
-- **Link Preview JS:** A library to get the link preview data from a URL.
-
-### Development Tools
-
-- **TypeScript:** A superset of JavaScript that adds static types.
-- **tsx:** A TypeScript execution environment for Node.js.
-- **esbuild:** An extremely fast JavaScript bundler and minifier.
-- **Autoprefixer:** PostCSS plugin to parse CSS and add vendor prefixes to CSS rules.
+- Real-time alert broadcasting to the OBS overlay via Socket.IO
+- Prefix command mode: `!alert`, `!help`, `!status`
+- Slash command mode: `/alert`, `/help`, `/status`
+- Media handling for images, videos, and URLs
+- Banned words filtering
+- Log history for approved / blocked / censored alerts
 
 ## Project Structure
 
-- `src/`: Contains the React frontend source code.
-- `server/`: Contains the Node.js Express backend source code.
-- `server.ts`: The main entry point for the backend server.
-- `index.html`: The entry point for the frontend application.
-- `package.json`: Project dependencies and scripts.
-- `.env.local`: Environment variables (e.g., `GEMINI_API_KEY`).
+- `src/`: React frontend
+- `server/`: Node.js backend
+- `server.ts`: Express + Socket.IO bootstrap
+- `register-commands.ts`: registers global slash commands
+- `settings.json`: stores the Discord token and channel configured in the dashboard
 
-## Setup and Development
+## Prerequisites
 
-1.  **Install Dependencies:**
+- Node.js 18+
+- npm
+- A Discord bot token
+- A Discord application ID
+- A configured Discord channel ID (via the dashboard)
 
+## Installation Universelle
+
+Pour une installation simplifiée sur votre système, utilisez les scripts d'installation fournis.
+
+### macOS & Linux
+
+1.  Ouvrez un terminal.
+2.  Accédez au répertoire du projet.
+3.  Rendez le script d'installation exécutable :
     ```bash
-    npm install
+    chmod +x install.sh
     ```
-
-2.  **Environment Variables:**
-    Create a `.env.local` file at the project root and set your `GEMINI_API_KEY`:
-
-    ```
-    GEMINI_API_KEY=YOUR_GEMINI_API_KEY
-    ```
-
-3.  **Run in Development Mode:**
+4.  Exécutez le script d'installation :
     ```bash
-    npm run dev
-    ```
-    This command typically runs the backend using `tsx server.ts` and the frontend via Vite.
-
-## Build and Deployment
-
-1.  **Build Application:**
-
-    ```bash
-    npm run build
+    ./install.sh
     ```
 
-    This compiles both the frontend (Vite) and backend (`esbuild`).
+### Windows
 
-2.  **Start Production Server:**
-    ```bash
-    npm run start
+1.  Ouvrez l'invite de commandes ou PowerShell.
+2.  Accédez au répertoire du projet.
+3.  Exécutez le script d'installation :
+    ```cmd
+    install.bat
     ```
-    After building, this command runs the compiled backend server (`node dist/server.cjs`).
+
+Ces scripts installeront les dépendances nécessaires et construiront l'application.
+
+## Exécuter l'application
+
+Pour démarrer l'application après l'installation :
+
+### macOS & Linux
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+### Windows
+
+```cmd
+start.bat
+```
+
+L'interface utilisateur sera disponible à `http://localhost:3000/`.
+
+## Configure the Discord bot
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
+2. Create a new application.
+3. Open **Bot** and add the bot.
+4. Copy the bot token.
+5. Open **OAuth2 > URL Generator**.
+6. Select **bot**.
+7. Grant permissions for **View Channels**, **Read Messages**, and **Send Messages**.
+8. Copy the generated invite URL and add the bot to your Discord server.
+
+## Configure the bot inside the dashboard
+
+1. Start the app with `npm run dev`.
+2. Open `http://localhost:3000/`.
+3. Paste your Discord bot token in the dashboard.
+4. Paste the target channel ID.
+5. Save the settings.
+
+The server will reconnect automatically using the saved token and channel.
+
+## Quick start
+
+1. Make sure your bot token and application ID are in `.env.local`:
+
+```env
+DISCORD_TOKEN=your_discord_bot_token
+APPLICATION_ID=your_discord_application_id
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Register the global slash commands:
+
+```bash
+npm run register-commands
+```
+
+4. Start the app:
+
+```bash
+npm run dev
+```
+
+5. Open `http://localhost:3000/` and configure the Discord token + channel in the dashboard if needed.
+
+6. In Discord, use:
+
+```text
+/alert
+/help
+/status
+```
+
+If the registration fails, check that `DISCORD_TOKEN` and `APPLICATION_ID` are present.
+
+## Command usage
+
+### Prefix commands
+
+```text
+!alert Nice stream message
+!help
+!status
+```
+
+### Slash commands
+
+```text
+/alert message: Nice stream message
+/help
+/status
+```
+
+## OBS setup
+
+1. Start the app.
+2. In OBS, add a **Browser Source**.
+3. Set the URL to `http://localhost:3000/`.
+4. Enable **Refresh browser when scene becomes active**.
+5. Resize and position the source as needed.
+
+## Build for production
+
+```bash
+npm run build
+npm run start
+```
+
+## Notes
+
+- Slash command registration uses the values from `.env.local`.
+- The app runtime uses the token stored in `settings.json` from the dashboard.
+- The bot keeps both command styles available, so you can migrate gradually.

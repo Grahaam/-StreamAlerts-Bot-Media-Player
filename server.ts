@@ -9,7 +9,10 @@ import { settingsManager, Settings } from "./server/settingsManager.js";
 import { logManager } from "./server/logManager.js";
 import { botManager } from "./server/discordBotManager.js";
 
-dotenv.config();
+const envLocal = dotenv.config({ path: ".env.local" });
+if (envLocal.error) {
+  dotenv.config();
+}
 
 const PORT = 3000;
 
