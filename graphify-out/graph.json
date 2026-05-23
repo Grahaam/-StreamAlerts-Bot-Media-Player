@@ -1,0 +1,2738 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "settings.json",
+      "file_type": "document",
+      "source_file": "settings.json",
+      "source_location": "L1",
+      "id": "settings_json"
+    },
+    {
+      "label": "discordToken",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L2",
+      "id": "discord_obs_overlay_settings_discordtoken"
+    },
+    {
+      "label": "channelId",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L3",
+      "id": "discord_obs_overlay_settings_channelid"
+    },
+    {
+      "label": "alertDuration",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L4",
+      "id": "discord_obs_overlay_settings_alertduration"
+    },
+    {
+      "label": "bannedWords",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L5",
+      "id": "discord_obs_overlay_settings_bannedwords"
+    },
+    {
+      "label": "mediaMaxSizeMB",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L13",
+      "id": "discord_obs_overlay_settings_mediamaxsizemb"
+    },
+    {
+      "label": "neonColor",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L14",
+      "id": "discord_obs_overlay_settings_neoncolor"
+    },
+    {
+      "label": "alertStyle",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L15",
+      "id": "discord_obs_overlay_settings_alertstyle"
+    },
+    {
+      "label": "bannedWordsAction",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L16",
+      "id": "discord_obs_overlay_settings_bannedwordsaction"
+    },
+    {
+      "label": "stopAlertShortcut",
+      "file_type": "code",
+      "source_file": "settings.json",
+      "source_location": "L17",
+      "id": "discord_obs_overlay_settings_stopalertshortcut"
+    },
+    {
+      "label": "metadata.json",
+      "file_type": "document",
+      "source_file": "metadata.json",
+      "source_location": "L1",
+      "id": "metadata_json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "metadata.json",
+      "source_location": "L2",
+      "id": "discord_obs_overlay_metadata_name"
+    },
+    {
+      "label": "description",
+      "file_type": "code",
+      "source_file": "metadata.json",
+      "source_location": "L3",
+      "id": "discord_obs_overlay_metadata_description"
+    },
+    {
+      "label": "requestFramePermissions",
+      "file_type": "code",
+      "source_file": "metadata.json",
+      "source_location": "L4",
+      "id": "discord_obs_overlay_metadata_requestframepermissions"
+    },
+    {
+      "label": "majorCapabilities",
+      "file_type": "code",
+      "source_file": "metadata.json",
+      "source_location": "L5",
+      "id": "discord_obs_overlay_metadata_majorcapabilities"
+    },
+    {
+      "label": "package.json",
+      "file_type": "document",
+      "source_file": "package.json",
+      "source_location": "L1",
+      "id": "package_json"
+    },
+    {
+      "label": "name",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "id": "discord_obs_overlay_package_name"
+    },
+    {
+      "label": "private",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "id": "discord_obs_overlay_package_private"
+    },
+    {
+      "label": "version",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "id": "discord_obs_overlay_package_version"
+    },
+    {
+      "label": "type",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "id": "discord_obs_overlay_package_type"
+    },
+    {
+      "label": "scripts",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "id": "discord_obs_overlay_package_scripts"
+    },
+    {
+      "label": "dev",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "id": "discord_obs_overlay_package_scripts_dev"
+    },
+    {
+      "label": "build",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "id": "discord_obs_overlay_package_scripts_build"
+    },
+    {
+      "label": "start",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "id": "discord_obs_overlay_package_scripts_start"
+    },
+    {
+      "label": "clean",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "id": "discord_obs_overlay_package_scripts_clean"
+    },
+    {
+      "label": "lint",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "id": "discord_obs_overlay_package_scripts_lint"
+    },
+    {
+      "label": "dependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "id": "discord_obs_overlay_package_dependencies"
+    },
+    {
+      "label": "@google/genai",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "id": "discord_obs_overlay_package_dependencies_google_genai"
+    },
+    {
+      "label": "@tailwindcss/vite",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "id": "discord_obs_overlay_package_dependencies_tailwindcss_vite"
+    },
+    {
+      "label": "@vitejs/plugin-react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "id": "discord_obs_overlay_package_dependencies_vitejs_plugin_react"
+    },
+    {
+      "label": "discord.js",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "id": "discord_obs_overlay_package_dependencies_discord_js"
+    },
+    {
+      "label": "dotenv",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "id": "discord_obs_overlay_package_dependencies_dotenv"
+    },
+    {
+      "label": "express",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "id": "discord_obs_overlay_package_dependencies_express"
+    },
+    {
+      "label": "link-preview-js",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "id": "discord_obs_overlay_package_dependencies_link_preview_js"
+    },
+    {
+      "label": "lucide-react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L21",
+      "id": "discord_obs_overlay_package_dependencies_lucide_react"
+    },
+    {
+      "label": "motion",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "id": "discord_obs_overlay_package_dependencies_motion"
+    },
+    {
+      "label": "react",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "id": "discord_obs_overlay_package_dependencies_react"
+    },
+    {
+      "label": "react-dom",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L24",
+      "id": "discord_obs_overlay_package_dependencies_react_dom"
+    },
+    {
+      "label": "react-player",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L25",
+      "id": "discord_obs_overlay_package_dependencies_react_player"
+    },
+    {
+      "label": "socket.io",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "id": "discord_obs_overlay_package_dependencies_socket_io"
+    },
+    {
+      "label": "socket.io-client",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L27",
+      "id": "discord_obs_overlay_package_dependencies_socket_io_client"
+    },
+    {
+      "label": "vite",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "id": "discord_obs_overlay_package_dependencies_vite"
+    },
+    {
+      "label": "devDependencies",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L30",
+      "id": "discord_obs_overlay_package_devdependencies"
+    },
+    {
+      "label": "@types/express",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L31",
+      "id": "discord_obs_overlay_package_devdependencies_types_express"
+    },
+    {
+      "label": "@types/node",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L32",
+      "id": "discord_obs_overlay_package_devdependencies_types_node"
+    },
+    {
+      "label": "autoprefixer",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L33",
+      "id": "discord_obs_overlay_package_devdependencies_autoprefixer"
+    },
+    {
+      "label": "esbuild",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "id": "discord_obs_overlay_package_devdependencies_esbuild"
+    },
+    {
+      "label": "tailwindcss",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L35",
+      "id": "discord_obs_overlay_package_devdependencies_tailwindcss"
+    },
+    {
+      "label": "tsx",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L36",
+      "id": "discord_obs_overlay_package_devdependencies_tsx"
+    },
+    {
+      "label": "typescript",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L37",
+      "id": "discord_obs_overlay_package_devdependencies_typescript"
+    },
+    {
+      "label": "vite",
+      "file_type": "code",
+      "source_file": "package.json",
+      "source_location": "L38",
+      "id": "discord_obs_overlay_package_devdependencies_vite"
+    },
+    {
+      "label": "test-cobalt.ts",
+      "file_type": "code",
+      "source_file": "test-cobalt.ts",
+      "source_location": "L1",
+      "id": "test_cobalt_ts"
+    },
+    {
+      "label": "tsconfig.json",
+      "file_type": "document",
+      "source_file": "tsconfig.json",
+      "source_location": "L1",
+      "id": "tsconfig_json"
+    },
+    {
+      "label": "compilerOptions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "id": "discord_obs_overlay_tsconfig_compileroptions"
+    },
+    {
+      "label": "target",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_target"
+    },
+    {
+      "label": "experimentalDecorators",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_experimentaldecorators"
+    },
+    {
+      "label": "useDefineForClassFields",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_usedefineforclassfields"
+    },
+    {
+      "label": "module",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_module"
+    },
+    {
+      "label": "lib",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_lib"
+    },
+    {
+      "label": "skipLibCheck",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_skiplibcheck"
+    },
+    {
+      "label": "moduleResolution",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_moduleresolution"
+    },
+    {
+      "label": "isolatedModules",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_isolatedmodules"
+    },
+    {
+      "label": "moduleDetection",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L15",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_moduledetection"
+    },
+    {
+      "label": "allowJs",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_allowjs"
+    },
+    {
+      "label": "jsx",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L17",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_jsx"
+    },
+    {
+      "label": "paths",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L18",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_paths"
+    },
+    {
+      "label": "@/*",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L19",
+      "id": "discord_obs_overlay_tsconfig_paths"
+    },
+    {
+      "label": "allowImportingTsExtensions",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L23",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_allowimportingtsextensions"
+    },
+    {
+      "label": "noEmit",
+      "file_type": "code",
+      "source_file": "tsconfig.json",
+      "source_location": "L24",
+      "id": "discord_obs_overlay_tsconfig_compileroptions_noemit"
+    },
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "id": "vite_config_ts"
+    },
+    {
+      "label": "server.ts",
+      "file_type": "code",
+      "source_file": "server.ts",
+      "source_location": "L1",
+      "id": "server_ts"
+    },
+    {
+      "label": "runServer()",
+      "file_type": "code",
+      "source_file": "server.ts",
+      "source_location": "L17",
+      "id": "discord_obs_overlay_server_runserver"
+    },
+    {
+      "label": "settingsManager.ts",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L1",
+      "id": "server_settingsmanager_ts"
+    },
+    {
+      "label": "SETTINGS_FILE",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L4",
+      "id": "server_settingsmanager_settings_file"
+    },
+    {
+      "label": "Settings",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L6",
+      "id": "server_settingsmanager_settings"
+    },
+    {
+      "label": "defaultSettings",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L18",
+      "id": "server_settingsmanager_defaultsettings"
+    },
+    {
+      "label": "SettingsManager",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L30",
+      "id": "server_settingsmanager_settingsmanager"
+    },
+    {
+      "label": ".loadSettings()",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L33",
+      "id": "server_settingsmanager_settingsmanager_loadsettings"
+    },
+    {
+      "label": ".saveSettings()",
+      "file_type": "code",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L48",
+      "id": "server_settingsmanager_settingsmanager_savesettings"
+    },
+    {
+      "label": "bannedWords.ts",
+      "file_type": "code",
+      "source_file": "server/bannedWords.ts",
+      "source_location": "L1",
+      "id": "server_bannedwords_ts"
+    },
+    {
+      "label": "processBannedWords()",
+      "file_type": "code",
+      "source_file": "server/bannedWords.ts",
+      "source_location": "L3",
+      "id": "server_bannedwords_processbannedwords"
+    },
+    {
+      "label": "discordBotManager.ts",
+      "file_type": "code",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L1",
+      "id": "server_discordbotmanager_ts"
+    },
+    {
+      "label": "DiscordBotManager",
+      "file_type": "code",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L7",
+      "id": "server_discordbotmanager_discordbotmanager"
+    },
+    {
+      "label": ".connectBot()",
+      "file_type": "code",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L13",
+      "id": "server_discordbotmanager_discordbotmanager_connectbot"
+    },
+    {
+      "label": ".shutdown()",
+      "file_type": "code",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L177",
+      "id": "server_discordbotmanager_discordbotmanager_shutdown"
+    },
+    {
+      "label": "botManager",
+      "file_type": "code",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L191",
+      "id": "server_discordbotmanager_botmanager"
+    },
+    {
+      "label": "logManager.ts",
+      "file_type": "code",
+      "source_file": "server/logManager.ts",
+      "source_location": "L1",
+      "id": "server_logmanager_ts"
+    },
+    {
+      "label": "LogEntry",
+      "file_type": "code",
+      "source_file": "server/logManager.ts",
+      "source_location": "L1",
+      "id": "server_logmanager_logentry"
+    },
+    {
+      "label": "LogManager",
+      "file_type": "code",
+      "source_file": "server/logManager.ts",
+      "source_location": "L12",
+      "id": "server_logmanager_logmanager"
+    },
+    {
+      "label": ".addLog()",
+      "file_type": "code",
+      "source_file": "server/logManager.ts",
+      "source_location": "L15",
+      "id": "server_logmanager_logmanager_addlog"
+    },
+    {
+      "label": ".clearLogs()",
+      "file_type": "code",
+      "source_file": "server/logManager.ts",
+      "source_location": "L25",
+      "id": "server_logmanager_logmanager_clearlogs"
+    },
+    {
+      "label": "mediaParser.ts",
+      "file_type": "code",
+      "source_file": "server/mediaParser.ts",
+      "source_location": "L1",
+      "id": "server_mediaparser_ts"
+    },
+    {
+      "label": "parseMediaUrl()",
+      "file_type": "code",
+      "source_file": "server/mediaParser.ts",
+      "source_location": "L3",
+      "id": "server_mediaparser_parsemediaurl"
+    },
+    {
+      "label": "resolveMediaFromLink()",
+      "file_type": "code",
+      "source_file": "server/mediaParser.ts",
+      "source_location": "L50",
+      "id": "server_mediaparser_resolvemediafromlink"
+    },
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L1",
+      "id": "src_app_tsx"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "src/App.tsx",
+      "source_location": "L6",
+      "id": "src_app_app"
+    },
+    {
+      "label": "src/main.tsx",
+      "file_type": "code",
+      "source_file": "src/main.tsx",
+      "source_location": "L1",
+      "id": "src_main_tsx"
+    },
+    {
+      "label": "suppressThemes",
+      "file_type": "code",
+      "source_file": "src/main.tsx",
+      "source_location": "L9",
+      "id": "src_main_suppressthemes"
+    },
+    {
+      "label": "globalExceptionHandler()",
+      "file_type": "code",
+      "source_file": "src/main.tsx",
+      "source_location": "L18",
+      "id": "src_main_globalexceptionhandler"
+    },
+    {
+      "label": "src/types.ts",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L1",
+      "id": "src_types_ts"
+    },
+    {
+      "label": "UIConfig",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L1",
+      "id": "src_types_uiconfig"
+    },
+    {
+      "label": "AlertPayload",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L13",
+      "id": "src_types_alertpayload"
+    },
+    {
+      "label": "LogEntry",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L28",
+      "id": "src_types_logentry"
+    },
+    {
+      "label": "Sparkle",
+      "file_type": "code",
+      "source_file": "src/types.ts",
+      "source_location": "L39",
+      "id": "src_types_sparkle"
+    },
+    {
+      "label": "StreamerDashboard.tsx",
+      "file_type": "code",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L1",
+      "id": "src_components_streamerdashboard_tsx"
+    },
+    {
+      "label": "StreamerDashboard()",
+      "file_type": "code",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L29",
+      "id": "components_streamerdashboard_streamerdashboard"
+    },
+    {
+      "label": "OBSOverlayView.tsx",
+      "file_type": "code",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L1",
+      "id": "src_components_obsoverlayview_tsx"
+    },
+    {
+      "label": "OBSOverlayView()",
+      "file_type": "code",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L7",
+      "id": "components_obsoverlayview_obsoverlayview"
+    },
+    {
+      "label": "server/settingsManager.ts",
+      "file_type": "code",
+      "id": "server_settingsManager_ts"
+    },
+    {
+      "label": "server/bannedWords.ts",
+      "file_type": "code",
+      "id": "server_bannedWords_ts"
+    },
+    {
+      "label": "server/discordBotManager.ts",
+      "file_type": "code",
+      "id": "server_discordBotManager_ts"
+    },
+    {
+      "label": "server/logManager.ts",
+      "file_type": "code",
+      "id": "server_logManager_ts"
+    },
+    {
+      "label": "server/mediaParser.ts",
+      "file_type": "code",
+      "id": "server_mediaParser_ts"
+    },
+    {
+      "label": "src/App.tsx",
+      "file_type": "code",
+      "id": "src_App_tsx"
+    },
+    {
+      "label": "src/components/StreamerDashboard.tsx",
+      "file_type": "code",
+      "id": "src_components_StreamerDashboard_tsx"
+    },
+    {
+      "label": "src/components/OBSOverlayView.tsx",
+      "file_type": "code",
+      "id": "src_components_OBSOverlayView_tsx"
+    },
+    {
+      "label": "index.html",
+      "file_type": "document",
+      "id": "index_html"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "id": "README_md"
+    },
+    {
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "id": "AGENTS_md"
+    },
+    {
+      "label": "React",
+      "file_type": "code",
+      "id": "react"
+    },
+    {
+      "label": "Vite",
+      "file_type": "code",
+      "id": "vite"
+    },
+    {
+      "label": "Node.js",
+      "file_type": "code",
+      "id": "node_js"
+    },
+    {
+      "label": "Express",
+      "file_type": "code",
+      "id": "express"
+    },
+    {
+      "label": "Socket.IO",
+      "file_type": "code",
+      "id": "socket_io"
+    },
+    {
+      "label": "Discord.js",
+      "file_type": "code",
+      "id": "discord_js"
+    },
+    {
+      "label": "Google Gemini API",
+      "file_type": "code",
+      "id": "google_gemini_api"
+    },
+    {
+      "label": "Tailwind CSS",
+      "file_type": "code",
+      "id": "tailwind_css"
+    }
+  ],
+  "edges": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_discordtoken",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_discordtoken"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_channelid",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_channelid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_alertduration",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_alertduration"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_bannedwords",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_bannedwords"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_mediamaxsizemb",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_mediamaxsizemb"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_neoncolor",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_neoncolor"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_alertstyle",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_alertstyle"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_bannedwordsaction",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_bannedwordsaction"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "settings.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "settings_json",
+      "_tgt": "discord_obs_overlay_settings_stopalertshortcut",
+      "source": "settings_json",
+      "target": "discord_obs_overlay_settings_stopalertshortcut"
+    },
+    {
+      "relation": "reads and writes",
+      "confidence": "EXTRACTED",
+      "_src": "server_settingsManager_ts",
+      "_tgt": "settings_json",
+      "source": "settings_json",
+      "target": "server_settingsManager_ts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "metadata.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "metadata_json",
+      "_tgt": "discord_obs_overlay_metadata_name",
+      "source": "metadata_json",
+      "target": "discord_obs_overlay_metadata_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "metadata.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "metadata_json",
+      "_tgt": "discord_obs_overlay_metadata_description",
+      "source": "metadata_json",
+      "target": "discord_obs_overlay_metadata_description"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "metadata.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "metadata_json",
+      "_tgt": "discord_obs_overlay_metadata_requestframepermissions",
+      "source": "metadata_json",
+      "target": "discord_obs_overlay_metadata_requestframepermissions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "metadata.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "metadata_json",
+      "_tgt": "discord_obs_overlay_metadata_majorcapabilities",
+      "source": "metadata_json",
+      "target": "discord_obs_overlay_metadata_majorcapabilities"
+    },
+    {
+      "relation": "mentions as major capability",
+      "confidence": "EXTRACTED",
+      "_src": "metadata_json",
+      "_tgt": "google_gemini_api",
+      "source": "metadata_json",
+      "target": "google_gemini_api"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_name",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_name"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_private",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_private"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_version",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_version"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_type",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_type"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_scripts",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_scripts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_dependencies",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_dependencies"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_src": "package_json",
+      "_tgt": "discord_obs_overlay_package_devdependencies",
+      "source": "package_json",
+      "target": "discord_obs_overlay_package_devdependencies"
+    },
+    {
+      "relation": "defines dependencies and scripts for",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "node_js",
+      "source": "package_json",
+      "target": "node_js"
+    },
+    {
+      "relation": "defines dependency",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "react",
+      "source": "package_json",
+      "target": "react"
+    },
+    {
+      "relation": "defines dependency",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "express",
+      "source": "package_json",
+      "target": "express"
+    },
+    {
+      "relation": "defines dependency",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "socket_io",
+      "source": "package_json",
+      "target": "socket_io"
+    },
+    {
+      "relation": "defines dependency",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "discord_js",
+      "source": "package_json",
+      "target": "discord_js"
+    },
+    {
+      "relation": "defines dependency",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "google_gemini_api",
+      "source": "package_json",
+      "target": "google_gemini_api"
+    },
+    {
+      "relation": "defines dependency",
+      "confidence": "EXTRACTED",
+      "_src": "package_json",
+      "_tgt": "tailwind_css",
+      "source": "package_json",
+      "target": "tailwind_css"
+    },
+    {
+      "relation": "refers for package specifics",
+      "confidence": "EXTRACTED",
+      "_src": "README_md",
+      "_tgt": "package_json",
+      "source": "package_json",
+      "target": "README_md"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_scripts",
+      "_tgt": "discord_obs_overlay_package_scripts_dev",
+      "source": "discord_obs_overlay_package_scripts",
+      "target": "discord_obs_overlay_package_scripts_dev"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_scripts",
+      "_tgt": "discord_obs_overlay_package_scripts_build",
+      "source": "discord_obs_overlay_package_scripts",
+      "target": "discord_obs_overlay_package_scripts_build"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_scripts",
+      "_tgt": "discord_obs_overlay_package_scripts_start",
+      "source": "discord_obs_overlay_package_scripts",
+      "target": "discord_obs_overlay_package_scripts_start"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_scripts",
+      "_tgt": "discord_obs_overlay_package_scripts_clean",
+      "source": "discord_obs_overlay_package_scripts",
+      "target": "discord_obs_overlay_package_scripts_clean"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_scripts",
+      "_tgt": "discord_obs_overlay_package_scripts_lint",
+      "source": "discord_obs_overlay_package_scripts",
+      "target": "discord_obs_overlay_package_scripts_lint"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_google_genai",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_google_genai"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_tailwindcss_vite",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_tailwindcss_vite"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_vitejs_plugin_react",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_vitejs_plugin_react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_discord_js",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_discord_js"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_dotenv",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_dotenv"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_express",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_express"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_link_preview_js",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_link_preview_js"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_lucide_react",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_lucide_react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_motion",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_motion"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_react",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_react_dom",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_react_dom"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_react_player",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_react_player"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_socket_io",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_socket_io"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_socket_io_client",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_socket_io_client"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_dependencies",
+      "_tgt": "discord_obs_overlay_package_dependencies_vite",
+      "source": "discord_obs_overlay_package_dependencies",
+      "target": "discord_obs_overlay_package_dependencies_vite"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "context": "import",
+      "_src": "discord_obs_overlay_package_dependencies_discord_js",
+      "_tgt": "discord_js",
+      "source": "discord_obs_overlay_package_dependencies_discord_js",
+      "target": "discord_js"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "context": "import",
+      "_src": "discord_obs_overlay_package_dependencies_express",
+      "_tgt": "express",
+      "source": "discord_obs_overlay_package_dependencies_express",
+      "target": "express"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "server.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_server_runserver",
+      "_tgt": "discord_obs_overlay_package_dependencies_express",
+      "source": "discord_obs_overlay_package_dependencies_express",
+      "target": "discord_obs_overlay_server_runserver"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "context": "import",
+      "_src": "discord_obs_overlay_package_dependencies_react",
+      "_tgt": "react",
+      "source": "discord_obs_overlay_package_dependencies_react",
+      "target": "react"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "import",
+      "_src": "discord_obs_overlay_package_dependencies_socket_io",
+      "_tgt": "socket_io",
+      "source": "discord_obs_overlay_package_dependencies_socket_io",
+      "target": "socket_io"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L28",
+      "weight": 1.0,
+      "context": "import",
+      "_src": "discord_obs_overlay_package_dependencies_vite",
+      "_tgt": "vite",
+      "source": "discord_obs_overlay_package_dependencies_vite",
+      "target": "vite"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_types_express",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_types_express"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_types_node",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_types_node"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_autoprefixer",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_autoprefixer"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_esbuild",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_esbuild"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_tailwindcss",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_tailwindcss"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L36",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_tsx",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_tsx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_typescript",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_typescript"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_package_devdependencies",
+      "_tgt": "discord_obs_overlay_package_devdependencies_vite",
+      "source": "discord_obs_overlay_package_devdependencies",
+      "target": "discord_obs_overlay_package_devdependencies_vite"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "source_file": "package.json",
+      "source_location": "L38",
+      "weight": 1.0,
+      "context": "import",
+      "_src": "discord_obs_overlay_package_devdependencies_vite",
+      "_tgt": "vite",
+      "source": "discord_obs_overlay_package_devdependencies_vite",
+      "target": "vite"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "tsconfig_json",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions",
+      "source": "tsconfig_json",
+      "target": "discord_obs_overlay_tsconfig_compileroptions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_target",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_target"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_experimentaldecorators",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_experimentaldecorators"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_usedefineforclassfields",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_usedefineforclassfields"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_module",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_module"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_lib",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_lib"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_skiplibcheck",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_skiplibcheck"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_moduleresolution",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_moduleresolution"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_isolatedmodules",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_isolatedmodules"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_moduledetection",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_moduledetection"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_allowjs",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_allowjs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_jsx",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_jsx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_paths",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_paths"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L23",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_allowimportingtsextensions",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_allowimportingtsextensions"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions",
+      "_tgt": "discord_obs_overlay_tsconfig_compileroptions_noemit",
+      "source": "discord_obs_overlay_tsconfig_compileroptions",
+      "target": "discord_obs_overlay_tsconfig_compileroptions_noemit"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tsconfig.json",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_src": "discord_obs_overlay_tsconfig_compileroptions_paths",
+      "_tgt": "discord_obs_overlay_tsconfig_paths",
+      "source": "discord_obs_overlay_tsconfig_compileroptions_paths",
+      "target": "discord_obs_overlay_tsconfig_paths"
+    },
+    {
+      "relation": "configures",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "vite.config.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "vite_config_ts",
+      "_tgt": "vite",
+      "source": "vite_config_ts",
+      "target": "vite"
+    },
+    {
+      "relation": "uses",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "express",
+      "source": "server_ts",
+      "target": "express"
+    },
+    {
+      "relation": "uses",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "socket_io",
+      "source": "server_ts",
+      "target": "socket_io"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "vite",
+      "source": "server_ts",
+      "target": "vite"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_settingsmanager_ts",
+      "source": "server_ts",
+      "target": "server_settingsmanager_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_settingsmanager_settingsmanager",
+      "source": "server_ts",
+      "target": "server_settingsmanager_settingsmanager"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_settingsmanager_settings",
+      "source": "server_ts",
+      "target": "server_settingsmanager_settings"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_logmanager_ts",
+      "source": "server_ts",
+      "target": "server_logmanager_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_logmanager_logmanager",
+      "source": "server_ts",
+      "target": "server_logmanager_logmanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_discordbotmanager_ts",
+      "source": "server_ts",
+      "target": "server_discordbotmanager_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "server_discordbotmanager_botmanager",
+      "source": "server_ts",
+      "target": "server_discordbotmanager_botmanager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "server_ts",
+      "_tgt": "discord_obs_overlay_server_runserver",
+      "source": "server_ts",
+      "target": "discord_obs_overlay_server_runserver"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_ts",
+      "_tgt": "server_settingsManager_ts",
+      "source": "server_ts",
+      "target": "server_settingsManager_ts"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_ts",
+      "_tgt": "server_logManager_ts",
+      "source": "server_ts",
+      "target": "server_logManager_ts"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_ts",
+      "_tgt": "server_discordBotManager_ts",
+      "source": "server_ts",
+      "target": "server_discordBotManager_ts"
+    },
+    {
+      "relation": "describes as main backend entry point",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "server_ts",
+      "source": "server_ts",
+      "target": "AGENTS_md"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_ts",
+      "_tgt": "server_settingsmanager_settings_file",
+      "source": "server_settingsmanager_ts",
+      "target": "server_settingsmanager_settings_file"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_ts",
+      "_tgt": "server_settingsmanager_settings",
+      "source": "server_settingsmanager_ts",
+      "target": "server_settingsmanager_settings"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_ts",
+      "_tgt": "server_settingsmanager_defaultsettings",
+      "source": "server_settingsmanager_ts",
+      "target": "server_settingsmanager_defaultsettings"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_ts",
+      "_tgt": "server_settingsmanager_settingsmanager",
+      "source": "server_settingsmanager_ts",
+      "target": "server_settingsmanager_settingsmanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/bannedWords.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "server_bannedwords_ts",
+      "_tgt": "server_settingsmanager_ts",
+      "source": "server_settingsmanager_ts",
+      "target": "server_bannedwords_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_settingsmanager_ts",
+      "source": "server_settingsmanager_ts",
+      "target": "server_discordbotmanager_ts"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_settingsmanager",
+      "_tgt": "server_settingsmanager_settingsmanager_loadsettings",
+      "source": "server_settingsmanager_settingsmanager",
+      "target": "server_settingsmanager_settingsmanager_loadsettings"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_settingsmanager",
+      "_tgt": "server_settingsmanager_settingsmanager_savesettings",
+      "source": "server_settingsmanager_settingsmanager",
+      "target": "server_settingsmanager_settingsmanager_savesettings"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/bannedWords.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "server_bannedwords_ts",
+      "_tgt": "server_settingsmanager_settingsmanager",
+      "source": "server_settingsmanager_settingsmanager",
+      "target": "server_bannedwords_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_settingsmanager_settingsmanager",
+      "source": "server_settingsmanager_settingsmanager",
+      "target": "server_discordbotmanager_ts"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "server/settingsManager.ts",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_src": "server_settingsmanager_settingsmanager_loadsettings",
+      "_tgt": "server_settingsmanager_settingsmanager_savesettings",
+      "source": "server_settingsmanager_settingsmanager_loadsettings",
+      "target": "server_settingsmanager_settingsmanager_savesettings"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/bannedWords.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "server_bannedwords_ts",
+      "_tgt": "server_bannedwords_processbannedwords",
+      "source": "server_bannedwords_ts",
+      "target": "server_bannedwords_processbannedwords"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_bannedwords_ts",
+      "source": "server_bannedwords_ts",
+      "target": "server_discordbotmanager_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_bannedwords_processbannedwords",
+      "source": "server_bannedwords_processbannedwords",
+      "target": "server_discordbotmanager_ts"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "discord_js",
+      "source": "server_discordbotmanager_ts",
+      "target": "discord_js"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_logmanager_ts",
+      "source": "server_discordbotmanager_ts",
+      "target": "server_logmanager_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_logmanager_logmanager",
+      "source": "server_discordbotmanager_ts",
+      "target": "server_logmanager_logmanager"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_mediaparser_ts",
+      "source": "server_discordbotmanager_ts",
+      "target": "server_mediaparser_ts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_mediaparser_resolvemediafromlink",
+      "source": "server_discordbotmanager_ts",
+      "target": "server_mediaparser_resolvemediafromlink"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_discordbotmanager_discordbotmanager",
+      "source": "server_discordbotmanager_ts",
+      "target": "server_discordbotmanager_discordbotmanager"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L191",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_ts",
+      "_tgt": "server_discordbotmanager_botmanager",
+      "source": "server_discordbotmanager_ts",
+      "target": "server_discordbotmanager_botmanager"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_discordbotmanager",
+      "_tgt": "server_discordbotmanager_discordbotmanager_connectbot",
+      "source": "server_discordbotmanager_discordbotmanager",
+      "target": "server_discordbotmanager_discordbotmanager_connectbot"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L177",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_discordbotmanager",
+      "_tgt": "server_discordbotmanager_discordbotmanager_shutdown",
+      "source": "server_discordbotmanager_discordbotmanager",
+      "target": "server_discordbotmanager_discordbotmanager_shutdown"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "server/discordBotManager.ts",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_src": "server_discordbotmanager_discordbotmanager_connectbot",
+      "_tgt": "server_discordbotmanager_discordbotmanager_shutdown",
+      "source": "server_discordbotmanager_discordbotmanager_connectbot",
+      "target": "server_discordbotmanager_discordbotmanager_shutdown"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/logManager.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "server_logmanager_ts",
+      "_tgt": "server_logmanager_logentry",
+      "source": "server_logmanager_ts",
+      "target": "server_logmanager_logentry"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/logManager.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_src": "server_logmanager_ts",
+      "_tgt": "server_logmanager_logmanager",
+      "source": "server_logmanager_ts",
+      "target": "server_logmanager_logmanager"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "server/logManager.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "server_logmanager_logmanager",
+      "_tgt": "server_logmanager_logmanager_addlog",
+      "source": "server_logmanager_logmanager",
+      "target": "server_logmanager_logmanager_addlog"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "server/logManager.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_src": "server_logmanager_logmanager",
+      "_tgt": "server_logmanager_logmanager_clearlogs",
+      "source": "server_logmanager_logmanager",
+      "target": "server_logmanager_logmanager_clearlogs"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/mediaParser.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "server_mediaparser_ts",
+      "_tgt": "server_mediaparser_parsemediaurl",
+      "source": "server_mediaparser_ts",
+      "target": "server_mediaparser_parsemediaurl"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "server/mediaParser.ts",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_src": "server_mediaparser_ts",
+      "_tgt": "server_mediaparser_resolvemediafromlink",
+      "source": "server_mediaparser_ts",
+      "target": "server_mediaparser_resolvemediafromlink"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "server/mediaParser.ts",
+      "source_location": "L66",
+      "weight": 1.0,
+      "_src": "server_mediaparser_resolvemediafromlink",
+      "_tgt": "server_mediaparser_parsemediaurl",
+      "source": "server_mediaparser_parsemediaurl",
+      "target": "server_mediaparser_resolvemediafromlink"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_app_tsx",
+      "_tgt": "react",
+      "source": "src_app_tsx",
+      "target": "react"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "src_app_tsx",
+      "_tgt": "src_components_obsoverlayview_tsx",
+      "source": "src_app_tsx",
+      "target": "src_components_obsoverlayview_tsx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_app_tsx",
+      "_tgt": "src_components_streamerdashboard_tsx",
+      "source": "src_app_tsx",
+      "target": "src_components_streamerdashboard_tsx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "src_app_tsx",
+      "_tgt": "src_types_ts",
+      "source": "src_app_tsx",
+      "target": "src_types_ts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/App.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_app_tsx",
+      "_tgt": "src_app_app",
+      "source": "src_app_tsx",
+      "target": "src_app_app"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "src_main_tsx",
+      "_tgt": "src_app_tsx",
+      "source": "src_app_tsx",
+      "target": "src_main_tsx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_main_tsx",
+      "_tgt": "react",
+      "source": "src_main_tsx",
+      "target": "react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "src_main_tsx",
+      "_tgt": "src_main_suppressthemes",
+      "source": "src_main_tsx",
+      "target": "src_main_suppressthemes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/main.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "src_main_tsx",
+      "_tgt": "src_main_globalexceptionhandler",
+      "source": "src_main_tsx",
+      "target": "src_main_globalexceptionhandler"
+    },
+    {
+      "relation": "imports and renders",
+      "confidence": "EXTRACTED",
+      "_src": "src_main_tsx",
+      "_tgt": "src_App_tsx",
+      "source": "src_main_tsx",
+      "target": "src_App_tsx"
+    },
+    {
+      "relation": "loads script",
+      "confidence": "EXTRACTED",
+      "_src": "index_html",
+      "_tgt": "src_main_tsx",
+      "source": "src_main_tsx",
+      "target": "index_html"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_types_ts",
+      "_tgt": "src_types_uiconfig",
+      "source": "src_types_ts",
+      "target": "src_types_uiconfig"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "src_types_ts",
+      "_tgt": "src_types_alertpayload",
+      "source": "src_types_ts",
+      "target": "src_types_alertpayload"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_src": "src_types_ts",
+      "_tgt": "src_types_logentry",
+      "source": "src_types_ts",
+      "target": "src_types_logentry"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/types.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "src_types_ts",
+      "_tgt": "src_types_sparkle",
+      "source": "src_types_ts",
+      "target": "src_types_sparkle"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "src_components_streamerdashboard_tsx",
+      "_tgt": "src_types_ts",
+      "source": "src_types_ts",
+      "target": "src_components_streamerdashboard_tsx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_components_obsoverlayview_tsx",
+      "_tgt": "src_types_ts",
+      "source": "src_types_ts",
+      "target": "src_components_obsoverlayview_tsx"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "src_App_tsx",
+      "_tgt": "src_types_ts",
+      "source": "src_types_ts",
+      "target": "src_App_tsx"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "src_components_StreamerDashboard_tsx",
+      "_tgt": "src_types_ts",
+      "source": "src_types_ts",
+      "target": "src_components_StreamerDashboard_tsx"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "src_components_OBSOverlayView_tsx",
+      "_tgt": "src_types_ts",
+      "source": "src_types_ts",
+      "target": "src_components_OBSOverlayView_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "src_components_streamerdashboard_tsx",
+      "_tgt": "src_types_uiconfig",
+      "source": "src_types_uiconfig",
+      "target": "src_components_streamerdashboard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_components_obsoverlayview_tsx",
+      "_tgt": "src_types_alertpayload",
+      "source": "src_types_alertpayload",
+      "target": "src_components_obsoverlayview_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "src_components_streamerdashboard_tsx",
+      "_tgt": "src_types_logentry",
+      "source": "src_types_logentry",
+      "target": "src_components_streamerdashboard_tsx"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "src_components_obsoverlayview_tsx",
+      "_tgt": "src_types_sparkle",
+      "source": "src_types_sparkle",
+      "target": "src_components_obsoverlayview_tsx"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_components_streamerdashboard_tsx",
+      "_tgt": "react",
+      "source": "src_components_streamerdashboard_tsx",
+      "target": "react"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "src_components_streamerdashboard_tsx",
+      "_tgt": "src_components_obsoverlayview_tsx",
+      "source": "src_components_streamerdashboard_tsx",
+      "target": "src_components_obsoverlayview_tsx"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/StreamerDashboard.tsx",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "src_components_streamerdashboard_tsx",
+      "_tgt": "components_streamerdashboard_streamerdashboard",
+      "source": "src_components_streamerdashboard_tsx",
+      "target": "components_streamerdashboard_streamerdashboard"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "src_components_obsoverlayview_tsx",
+      "_tgt": "react",
+      "source": "src_components_obsoverlayview_tsx",
+      "target": "react"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/OBSOverlayView.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "src_components_obsoverlayview_tsx",
+      "_tgt": "components_obsoverlayview_obsoverlayview",
+      "source": "src_components_obsoverlayview_tsx",
+      "target": "components_obsoverlayview_obsoverlayview"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_discordBotManager_ts",
+      "_tgt": "server_settingsManager_ts",
+      "source": "server_settingsManager_ts",
+      "target": "server_discordBotManager_ts"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_bannedWords_ts",
+      "_tgt": "server_settingsManager_ts",
+      "source": "server_settingsManager_ts",
+      "target": "server_bannedWords_ts"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_discordBotManager_ts",
+      "_tgt": "server_bannedWords_ts",
+      "source": "server_bannedWords_ts",
+      "target": "server_discordBotManager_ts"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_discordBotManager_ts",
+      "_tgt": "server_logManager_ts",
+      "source": "server_discordBotManager_ts",
+      "target": "server_logManager_ts"
+    },
+    {
+      "relation": "imports",
+      "confidence": "EXTRACTED",
+      "_src": "server_discordBotManager_ts",
+      "_tgt": "server_mediaParser_ts",
+      "source": "server_discordBotManager_ts",
+      "target": "server_mediaParser_ts"
+    },
+    {
+      "relation": "uses",
+      "confidence": "EXTRACTED",
+      "_src": "server_discordBotManager_ts",
+      "_tgt": "discord_js",
+      "source": "server_discordBotManager_ts",
+      "target": "discord_js"
+    },
+    {
+      "relation": "imports and uses",
+      "confidence": "EXTRACTED",
+      "_src": "src_App_tsx",
+      "_tgt": "src_components_OBSOverlayView_tsx",
+      "source": "src_App_tsx",
+      "target": "src_components_OBSOverlayView_tsx"
+    },
+    {
+      "relation": "imports and uses",
+      "confidence": "EXTRACTED",
+      "_src": "src_App_tsx",
+      "_tgt": "src_components_StreamerDashboard_tsx",
+      "source": "src_App_tsx",
+      "target": "src_components_StreamerDashboard_tsx"
+    },
+    {
+      "relation": "imports and uses",
+      "confidence": "EXTRACTED",
+      "_src": "src_components_StreamerDashboard_tsx",
+      "_tgt": "src_components_OBSOverlayView_tsx",
+      "source": "src_components_StreamerDashboard_tsx",
+      "target": "src_components_OBSOverlayView_tsx"
+    },
+    {
+      "relation": "describes as frontend entry point",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "index_html",
+      "source": "index_html",
+      "target": "AGENTS_md"
+    },
+    {
+      "relation": "mentions as prerequisite",
+      "confidence": "EXTRACTED",
+      "_src": "README_md",
+      "_tgt": "node_js",
+      "source": "README_md",
+      "target": "node_js"
+    },
+    {
+      "relation": "further documentation in",
+      "confidence": "EXTRACTED",
+      "_src": "README_md",
+      "_tgt": "AGENTS_md",
+      "source": "README_md",
+      "target": "AGENTS_md"
+    },
+    {
+      "relation": "describes as frontend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "react",
+      "source": "AGENTS_md",
+      "target": "react"
+    },
+    {
+      "relation": "describes as frontend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "vite",
+      "source": "AGENTS_md",
+      "target": "vite"
+    },
+    {
+      "relation": "describes as backend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "node_js",
+      "source": "AGENTS_md",
+      "target": "node_js"
+    },
+    {
+      "relation": "describes as backend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "express",
+      "source": "AGENTS_md",
+      "target": "express"
+    },
+    {
+      "relation": "describes as backend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "socket_io",
+      "source": "AGENTS_md",
+      "target": "socket_io"
+    },
+    {
+      "relation": "describes as backend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "discord_js",
+      "source": "AGENTS_md",
+      "target": "discord_js"
+    },
+    {
+      "relation": "describes as backend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "google_gemini_api",
+      "source": "AGENTS_md",
+      "target": "google_gemini_api"
+    },
+    {
+      "relation": "describes as frontend technology",
+      "confidence": "EXTRACTED",
+      "_src": "AGENTS_md",
+      "_tgt": "tailwind_css",
+      "source": "AGENTS_md",
+      "target": "tailwind_css"
+    }
+  ]
+}

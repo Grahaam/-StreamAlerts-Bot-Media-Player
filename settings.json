@@ -1,0 +1,18 @@
+{
+
+  "channelId": "1507523181299368047",
+  "alertDuration": 80000,
+  "bannedWords": [
+    "scam",
+    "spam",
+    "troll",
+    "nsfw",
+    "hacker",
+    "fakebot"
+  ],
+  "mediaMaxSizeMB": 8,
+  "neonColor": "#6366f1",
+  "alertStyle": "neon",
+  "bannedWordsAction": "censor",
+  "stopAlertShortcut": "Escape"
+}

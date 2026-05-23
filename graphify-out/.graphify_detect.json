@@ -1,0 +1,40 @@
+{
+  "files": {
+    "code": [
+      "/Users/home/Downloads/discord-obs-overlay/settings.json",
+      "/Users/home/Downloads/discord-obs-overlay/metadata.json",
+      "/Users/home/Downloads/discord-obs-overlay/package.json",
+      "/Users/home/Downloads/discord-obs-overlay/test-cobalt.ts",
+      "/Users/home/Downloads/discord-obs-overlay/tsconfig.json",
+      "/Users/home/Downloads/discord-obs-overlay/vite.config.ts",
+      "/Users/home/Downloads/discord-obs-overlay/server.ts",
+      "/Users/home/Downloads/discord-obs-overlay/server/settingsManager.ts",
+      "/Users/home/Downloads/discord-obs-overlay/server/bannedWords.ts",
+      "/Users/home/Downloads/discord-obs-overlay/server/discordBotManager.ts",
+      "/Users/home/Downloads/discord-obs-overlay/server/logManager.ts",
+      "/Users/home/Downloads/discord-obs-overlay/server/mediaParser.ts",
+      "/Users/home/Downloads/discord-obs-overlay/src/App.tsx",
+      "/Users/home/Downloads/discord-obs-overlay/src/main.tsx",
+      "/Users/home/Downloads/discord-obs-overlay/src/types.ts",
+      "/Users/home/Downloads/discord-obs-overlay/src/components/StreamerDashboard.tsx",
+      "/Users/home/Downloads/discord-obs-overlay/src/components/OBSOverlayView.tsx"
+    ],
+    "document": [
+      "/Users/home/Downloads/discord-obs-overlay/index.html",
+      "/Users/home/Downloads/discord-obs-overlay/README.md",
+      "/Users/home/Downloads/discord-obs-overlay/AGENTS.md"
+    ],
+    "paper": [],
+    "image": [],
+    "video": []
+  },
+  "total_files": 20,
+  "total_words": 8871,
+  "needs_graph": false,
+  "warning": "Corpus is ~8,871 words - fits in a single context window. You may not need a graph.",
+  "skipped_sensitive": [
+    "/Users/home/Downloads/discord-obs-overlay/.env.example"
+  ],
+  "graphifyignore_patterns": 8,
+  "scan_root": "/Users/home/Downloads/discord-obs-overlay"
+}
