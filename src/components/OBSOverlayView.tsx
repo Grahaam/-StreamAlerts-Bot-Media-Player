@@ -82,13 +82,19 @@ export default function OBSOverlayView({
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (!activeAlert) return;
 
-			const configKey = activeAlert.stopAlertShortcut || "Escape";
+			const configKey =
+				typeof activeAlert.stopAlertShortcut === "string" &&
+				activeAlert.stopAlertShortcut.trim()
+					? activeAlert.stopAlertShortcut.trim()
+					: "Escape";
+			const key = typeof e.key === "string" ? e.key : "";
+			const code = typeof e.code === "string" ? e.code : "";
 
 			const matchesKey =
-				e.key.toLowerCase() === configKey.toLowerCase() ||
-				e.code.toLowerCase() === configKey.toLowerCase() ||
-				(configKey.toLowerCase() === "space" && e.key === " ") ||
-				(configKey.toLowerCase() === "escape" && e.key === "Escape");
+				key.toLowerCase() === configKey.toLowerCase() ||
+				code.toLowerCase() === configKey.toLowerCase() ||
+				(configKey.toLowerCase() === "space" && key === " ") ||
+				(configKey.toLowerCase() === "escape" && key === "Escape");
 
 			if (matchesKey) {
 				console.log("🛑 Alert stopped by keyboard shortcut:", configKey);

@@ -113,13 +113,19 @@ export default function StreamerDashboard() {
         return;
       }
 
-      const configKey = config.stopAlertShortcut || "Escape";
+      const configKey =
+        typeof config.stopAlertShortcut === "string" &&
+        config.stopAlertShortcut.trim()
+          ? config.stopAlertShortcut.trim()
+          : "Escape";
+      const key = typeof e.key === "string" ? e.key : "";
+      const code = typeof e.code === "string" ? e.code : "";
 
-      const matchesKey = 
-        e.key.toLowerCase() === configKey.toLowerCase() ||
-        e.code.toLowerCase() === configKey.toLowerCase() ||
-        (configKey.toLowerCase() === "space" && e.key === " ") ||
-        (configKey.toLowerCase() === "escape" && e.key === "Escape");
+      const matchesKey =
+        key.toLowerCase() === configKey.toLowerCase() ||
+        code.toLowerCase() === configKey.toLowerCase() ||
+        (configKey.toLowerCase() === "space" && key === " ") ||
+        (configKey.toLowerCase() === "escape" && key === "Escape");
 
       if (matchesKey) {
         console.log("🛑 Global shortcut triggered from Dashboard. Skipping alert...");

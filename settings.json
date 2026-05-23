@@ -1,5 +1,5 @@
 {
-
+  "discordToken": "",
   "channelId": "1507523181299368047",
   "alertDuration": 80000,
   "bannedWords": [
