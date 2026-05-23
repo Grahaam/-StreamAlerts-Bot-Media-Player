@@ -11,10 +11,10 @@ import { botManager } from "./server/discordBotManager.js";
 
 const envLocal = dotenv.config({ path: ".env.local" });
 if (envLocal.error) {
-  dotenv.config();
+	dotenv.config();
 }
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Setup server and express endpoints
 async function runServer() {

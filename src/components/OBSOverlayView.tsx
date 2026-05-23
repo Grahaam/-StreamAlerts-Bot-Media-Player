@@ -491,7 +491,7 @@ export default function OBSOverlayView({
 														className={`w-full h-full block relative z-10 object-contain ${embedMode ? "bg-black" : "bg-transparent drop-shadow-[0_0_2rem_rgba(0,0,0,0.8)]"}`}
 														playsInline
 														controls={false}
-														muted={embedMode}
+														muted={true}
 														autoPlay
 														onEnded={() => onVideoEndedRef.current?.()}
 														onError={() => onVideoErrorRef.current?.()}
@@ -525,7 +525,7 @@ export default function OBSOverlayView({
 																ref={reactPlayerRef}
 																url={activeAlert.mediaUrl}
 																playing={true}
-																muted={embedMode}
+																muted={true}
 																controls={!embedMode}
 																width="100%"
 																height="100%"
@@ -555,12 +555,9 @@ export default function OBSOverlayView({
 																	youtube: {
 																		playerVars: {
 																			autoplay: 1,
-																			mute: embedMode ? 1 : 0,
+																			mute: 1,
 																			controls: embedMode ? 0 : 1,
-																			rel: 0,
-																			showinfo: 0,
-																			iv_load_policy: 3,
-																			modestbranding: 1,
+																			rel: 1,
 																			playsinline: 1,
 																		},
 																	},
@@ -572,8 +569,9 @@ export default function OBSOverlayView({
 											) : activeAlert.type === "iframe" ? (
 												<iframe
 													src={
-														activeAlert.mediaUrl.includes("twitch.tv")
-															? `${activeAlert.mediaUrl}&parent=${window.location.hostname}&autoplay=true`
+														activeAlert.mediaUrl.includes("twitch.tv") &&
+														!activeAlert.mediaUrl.includes("parent=")
+															? `${activeAlert.mediaUrl}${activeAlert.mediaUrl.includes("?") ? "&" : "?"}parent=${window.location.hostname}&autoplay=true`
 															: activeAlert.mediaUrl
 													}
 													title="Média Embed"
