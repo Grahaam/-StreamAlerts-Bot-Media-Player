@@ -1,37 +1,39 @@
 @echo off
+setlocal
 
-REM Script d'installation pour Windows
+:: Check if Node.js is installed
+node -v >nul 2>nul
+if %errorlevel% equ 0 goto :node_installed
 
-echo "Démarrage de l'installation..."
-
-REM Vérifie si Node.js est installé
-where node >nul 2>nul
-if %errorlevel% neq 0 (
-    echo "Node.js n'est pas installé. Veuillez l'installer pour continuer."
-    echo "Visitez https://nodejs.org/ pour les instructions d'installation."
-    exit /b 1
+echo Node.js is not trouve. Installation en cours...
+echo Telechargement de Node.js v20 (64-bit)...
+powershell -Command "Invoke-WebRequest -Uri 'https://nodejs.org/dist/v20.11.1/node-v20.11.1-x64.msi' -OutFile 'node_installer.msi'"
+if exist node_installer.msi (
+    echo Installation de Node.js (une fenetre d'autorisation administrateur peut s'ouvrir)...
+    start /wait msiexec /i node_installer.msi
+    del node_installer.msi
+    echo.
+    echo ========================================================
+    echo Node.js a ete installe ! VEUILLEZ FERMER CETTE FENETRE
+    echo RELANCER CE SCRIPT (install.bat) POUR CONTINUER.
+    echo ========================================================
+    pause
+    exit /b
+) else (
+    echo Echec du telechargement de Node.js. Veuillez l'installer manuellement depuis https://nodejs.org/
+    pause
+    exit /b
 )
 
-echo "Node.js est installé."
-
-REM Installation des dépendances npm
-echo "Installation des dépendances npm..."
-npm install
-if %errorlevel% neq 0 (
-    echo "Erreur lors de l'installation des dépendances npm."
-    exit /b 1
-)
-
-echo "Dépendances npm installées avec succès."
-
-REM Construction de l'application
-echo "Construction de l'application..."
-npm run build
-if %errorlevel% neq 0 (
-    echo "Erreur lors de la construction de l'application."
-    exit /b 1
-)
-
-echo "Application construite avec succès."
-
-echo "Installation terminée. Vous pouvez maintenant exécuter l'application avec start.bat"
+:node_installed
+echo Node.js est installe :
+node -v
+echo.
+echo Installation des dependances de StreamAlerts Hub...
+call npm install
+echo.
+echo Compilation de l'application...
+call npm run build
+echo.
+echo Installation terminee ! Vous pouvez maintenant lancer start.bat
+pause

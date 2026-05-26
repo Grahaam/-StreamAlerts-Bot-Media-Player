@@ -4,6 +4,7 @@ import {
   Settings, 
   Activity, 
   Sliders, 
+  Shield,
   ShieldAlert, 
   Sparkles, 
   Play, 
@@ -21,14 +22,71 @@ import {
   User,
   Image as ImageIcon,
   Video as VideoIcon,
-  Volume2
+  Volume2,
+  GripVertical
 } from "lucide-react";
-import { UIConfig, LogEntry } from "../types";
+import { UIConfig, LogEntry, AlertPayload } from "../types";
 import OBSOverlayView from "./OBSOverlayView";
+import TutorialOverlay from "./TutorialOverlay";
 
 export default function StreamerDashboard() {
-  const [activeTab, setActiveTab] = useState<"credentials" | "styling" | "filters" | "simulator">("credentials");
+  const [activeTab, setActiveTab] = useState<"credentials" | "styling" | "filters" | "moderation" | "simulator">("credentials");
   const [saveLoading, setSaveLoading] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [pendingQueue, setPendingQueue] = useState<AlertPayload[]>([]);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDrop = async (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+    
+    const newQueue = [...pendingQueue];
+    const [movedItem] = newQueue.splice(draggedIndex, 1);
+    newQueue.splice(targetIndex, 0, movedItem);
+    setPendingQueue(newQueue);
+    setDraggedIndex(null);
+    
+    try {
+      await fetch("/api/queue/force-update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ queue: newQueue }),
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const cancelAlertFromQueue = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await fetch("/api/queue/remove-item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    const hasSeen = localStorage.getItem("hasSeenTutorial");
+    if (!hasSeen) {
+      setShowTutorial(true);
+    }
+  }, []);
+
+  const finishTutorial = () => {
+    localStorage.setItem("hasSeenTutorial", "true");
+    setShowTutorial(false);
+  };
+
   const [config, setConfig] = useState<UIConfig>({
     discordToken: "",
     channelId: "",
@@ -39,6 +97,10 @@ export default function StreamerDashboard() {
     alertStyle: "neon",
     bannedWordsAction: "censor",
     stopAlertShortcut: "Escape",
+    youtubeCookiesContent: "",
+    cooldownSeconds: 0,
+    blockLinks: false,
+    blockNSFW: false,
   });
 
   const [botStatus, setBotStatus] = useState({
@@ -113,19 +175,13 @@ export default function StreamerDashboard() {
         return;
       }
 
-      const configKey =
-        typeof config.stopAlertShortcut === "string" &&
-        config.stopAlertShortcut.trim()
-          ? config.stopAlertShortcut.trim()
-          : "Escape";
-      const key = typeof e.key === "string" ? e.key : "";
-      const code = typeof e.code === "string" ? e.code : "";
+      const configKey = config.stopAlertShortcut || "Escape";
 
-      const matchesKey =
-        key.toLowerCase() === configKey.toLowerCase() ||
-        code.toLowerCase() === configKey.toLowerCase() ||
-        (configKey.toLowerCase() === "space" && key === " ") ||
-        (configKey.toLowerCase() === "escape" && key === "Escape");
+      const matchesKey = 
+        e.key.toLowerCase() === configKey.toLowerCase() ||
+        e.code.toLowerCase() === configKey.toLowerCase() ||
+        (configKey.toLowerCase() === "space" && e.key === " ") ||
+        (configKey.toLowerCase() === "escape" && e.key === "Escape");
 
       if (matchesKey) {
         console.log("🛑 Global shortcut triggered from Dashboard. Skipping alert...");
@@ -152,6 +208,17 @@ export default function StreamerDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(overrideConfig),
       });
+      if (!response.ok) {
+        let errorMsg = response.statusText;
+        try {
+            const errData = await response.json();
+            if (errData.error) errorMsg = errData.error;
+        } catch {
+            const errText = await response.text();
+            if (errText) errorMsg = errText.substring(0, 50);
+        }
+        throw new Error(`Failed to save: ${response.status} ${errorMsg}`);
+      }
       const data = await response.json();
       if (data.success) {
         setConfig(data.settings);
@@ -275,6 +342,13 @@ export default function StreamerDashboard() {
 
   return (
     <div className="min-h-screen bg-[#050508] text-[#e0e0e6] flex flex-col font-sans selection:bg-indigo-600 selection:text-white relative overflow-hidden">
+      {showTutorial && (
+        <TutorialOverlay 
+          onComplete={finishTutorial} 
+          setActiveTab={setActiveTab} 
+        />
+      )}
+      
       {/* Dynamic Background Glowing Accents */}
       <div className="absolute top-[15%] left-[75%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none z-0"></div>
       <div className="absolute top-[65%] left-[15%] -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-purple-600/5 blur-[130px] rounded-full pointer-events-none z-0"></div>
@@ -287,15 +361,11 @@ export default function StreamerDashboard() {
           </div>
           <div>
             <span className="font-bold text-lg sm:text-xl tracking-tight text-white flex items-center gap-2">
-              StreamAlerts <span className="text-indigo-400 font-medium">Hub</span>
-              <span className="hidden xs:inline bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[9px] uppercase font-mono px-2 py-0.5 rounded-full font-bold tracking-widest leading-none">
-                v1.1.0
-              </span>
+              StreamAlerts
             </span>
           </div>
         </div>
 
-        {/* System core Connection indicators status */}
         <div className="flex items-center gap-2 sm:gap-4 relative z-10 w-full sm:w-auto justify-between sm:justify-end">
           {/* Discord Bot Status Card */}
           <div className={`flex items-center gap-2 px-3 py-1 border rounded-full transition-all duration-300 text-xs font-semibold uppercase tracking-wider ${
@@ -325,17 +395,6 @@ export default function StreamerDashboard() {
                 <RefreshCw className="w-3 h-3" />
               </button>
             )}
-          </div>
-
-          {/* WebSocket Live Status indicator */}
-          <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-semibold uppercase tracking-wider">
-            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></div>
-            <span className="text-[10px] tracking-wide shrink-0 hidden sm:inline">WebSocket Live</span>
-            <span className="text-[10px] tracking-wide shrink-0 sm:hidden">WS Live</span>
-          </div>
-
-          <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shrink-0 hidden sm:flex">
-            <span className="text-sm font-bold text-white">JD</span>
           </div>
         </div>
       </nav>
@@ -373,28 +432,16 @@ export default function StreamerDashboard() {
               <span className="xs:hidden">Styles</span>
             </button>
             <button
-              onClick={() => setActiveTab("filters")}
+              onClick={() => setActiveTab("moderation")}
               className={`flex items-center gap-1.5 xs:gap-2 px-3 xs:px-4 py-2 xs:py-2.5 rounded-xl text-xs xs:text-sm font-semibold transition-all duration-305 shrink-0 cursor-pointer ${
-                activeTab === "filters"
+                activeTab === "moderation"
                   ? "bg-indigo-600 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border-t border-white/20"
                   : "text-white/45 hover:text-white/80 hover:bg-white/5"
               }`}
             >
-              <ShieldAlert className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
-              <span className="hidden xs:inline">Modération & Filtres</span>
+              <Shield className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
+              <span className="hidden xs:inline">Modération</span>
               <span className="xs:hidden">Modération</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("simulator")}
-              className={`flex items-center gap-1.5 xs:gap-2 px-3 xs:px-4 py-2 xs:py-2.5 rounded-xl text-xs xs:text-sm font-semibold transition-all duration-305 shrink-0 cursor-pointer ${
-                activeTab === "simulator"
-                  ? "bg-indigo-600 text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border-t border-white/20"
-                  : "text-white/45 hover:text-white/80 hover:bg-white/5"
-              }`}
-            >
-              <Play className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
-              <span className="hidden xs:inline">Test Simulé</span>
-              <span className="xs:hidden">Simulateur</span>
             </button>
           </div>
 
@@ -405,9 +452,9 @@ export default function StreamerDashboard() {
               {activeTab === "credentials" && (
                 <div className="flex flex-col gap-5 animate-fade-in">
                   <div className="border-b border-slate-900 pb-3">
-                    <h2 className="text-lg font-bold font-display text-white">Liaison Bot Discord</h2>
+                    <h2 className="text-lg font-bold font-display text-white">Paramètres du Bot Discord</h2>
                     <p className="text-xs text-slate-400 mt-1">
-                      Configurez l'accès du bot Discord pour qu'il écoute le salon spécificités de votre serveur de streaming.
+                      Configurez l'accès du bot Discord pour qu'il écoute votre salon de requêtes média.
                     </p>
                   </div>
 
@@ -517,6 +564,40 @@ export default function StreamerDashboard() {
                         Appuyez sur cette touche (ex: Escape, Space, s) pour masquer l'alerte média active instantanément.
                       </span>
                     </div>
+
+                    <div className="flex flex-col gap-1.5 col-span-2">
+                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                        Cookies Vidéo (YouTube, Instagram, TikTok)
+                      </label>
+                      <textarea
+                        placeholder="# Netscape HTTP Cookie File&#10;..."
+                        value={config.youtubeCookiesContent || ""}
+                        onChange={(e) => setConfig({ ...config, youtubeCookiesContent: e.target.value })}
+                        onBlur={(e) => {
+                          const raw = e.target.value;
+                          if (!raw) return;
+                          const relevantDomains = ['youtube.com', 'instagram.com', 'tiktok.com', 'google.com'];
+                          const filtered = raw.split('\n').filter(line => {
+                            const t = line.trim();
+                            if (!t || t.startsWith('#')) return true;
+                            return relevantDomains.some(d => t.includes(d));
+                          }).join('\n');
+                          setConfig({ ...config, youtubeCookiesContent: filtered });
+                        }}
+                        className="bg-black/45 w-full border border-white/10 rounded-xl px-4 py-3 text-xs font-mono min-h-[140px] text-[#0f0] placeholder:text-white/20 focus:outline-none focus:border-indigo-500 transition-all duration-300"
+                      />
+                      
+                      <div className="bg-indigo-950/30 border border-indigo-500/20 rounded-xl p-3 mt-1">
+                        <h4 className="text-xs font-bold text-indigo-300 mb-1">Comment configurer les cookies ?</h4>
+                        <ul className="text-[10px] text-indigo-200/70 space-y-1 list-disc pl-4">
+                          <li>Installez une extension comme <strong>"Get cookies.txt LOCALLY"</strong> sur votre navigateur Chrome/Firefox.</li>
+                          <li>Connectez-vous à vos comptes Instagram, TikTok, ou YouTube.</li>
+                          <li>Cliquez sur l'extension pour exporter le fichier <code>cookies.txt</code> (format Netscape).</li>
+                          <li>Ouvrez ce fichier avec un éditeur de texte (Bloc-notes) et copiez-collez tout le contenu ici.</li>
+                          <li>Cela permet à la plateforme de télécharger des médias comme si elle était connectée à votre compte (contournement des restrictions Instagram ou TikTok).</li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -595,198 +676,157 @@ export default function StreamerDashboard() {
                 </div>
               )}
 
-              {/* TAB 3: Advanced content filtering settings */}
-              {activeTab === "filters" && (
-                <div className="flex flex-col gap-5 animate-fade-in">
+              {/* TAB 3: Moderation Options */}
+              {activeTab === "moderation" && (
+                <div className="flex flex-col gap-6 animate-fade-in">
                   <div className="border-b border-white/10 pb-3">
-                    <h2 className="text-lg font-bold font-display text-white">Filtrage de contenu anti-trolls</h2>
+                    <h2 className="text-lg font-bold font-display text-white">Modération & Sécurité</h2>
                     <p className="text-xs text-white/40 mt-1">
-                      Sécurisez vos lives en prévenant l'apparition de termes à caractère insultant ou inadaptés pour votre audience.
+                      Contrôlez les demandes, bloquez les mots indésirables et sécurisez votre stream contre les trolls.
                     </p>
                   </div>
 
-                  {/* Local rule-based safety banner */}
-                  <div className="bg-gradient-to-r from-emerald-600/10 to-teal-600/5 border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                    <div className="flex gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-400 shrink-0">
-                        <CheckCircle2 className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <span className="text-sm font-extrabold text-white flex items-center gap-2">
-                          Filtrage Local Ultra-Sécurisé
-                          <span className="bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-[9px] uppercase font-mono px-1.5 py-0.2 rounded font-black">ACTIF</span>
-                        </span>
-                        <p className="text-[11px] text-white/40 mt-0.5 leading-relaxed">
-                          Le système de détection des mots-clés s'exécute localement de façon instantanée, garantissant la sécurité de votre live de manière ultra-sécurisée.
-                        </p>
-                      </div>
+                  {/* Discord AutoMod Native Info */}
+                  <div className="bg-[#5865F2]/10 border border-[#5865F2]/30 rounded-xl p-4 flex gap-3 items-start">
+                    <Shield className="w-6 h-6 text-[#5865F2] shrink-0" />
+                    <div>
+                      <h3 className="text-sm font-bold text-[#5865F2] mb-1">Protection native : Discord AutoMod</h3>
+                      <p className="text-xs text-[#5865F2]/70 leading-relaxed">
+                        L'application s'intègre naturellement avec l'<strong>AutoMod de Discord</strong>. Configurez vos filtres anti-insultes, bloqueurs de spam et détection de contenu explicite (IA) directement dans les Paramètres de votre Serveur Discord. <br/>
+                        <span className="text-white/60 mt-1 block">Tout message bloqué par Discord n'atteindra jamais l'Overlay. C'est la méthode de sécurité la plus puissante.</span>
+                      </p>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                        Comportement à l'interception de mots
-                      </label>
-                      <select
-                        value={config.bannedWordsAction}
-                        onChange={(e) => {
-                          const newConfig = { ...config, bannedWordsAction: e.target.value as any };
-                          setConfig(newConfig);
-                          handleSaveSettings(newConfig);
-                        }}
-                        className="bg-black/45 border border-white/10 rounded-xl px-4 py-3 text-sm text-[#e0e0e6] focus:outline-none focus:border-indigo-500 transition"
-                      >
-                        <option value="censor" className="bg-[#0a0a0f]">Censurer les mots (ex: s**m)</option>
-                        <option value="block" className="bg-[#0a0a0f]">Ignorer / Bloquer l'alerte au complet</option>
-                      </select>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                        Ajouter un terme interdit à votre liste
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder="Exemple: scam"
-                          value={bannedWordInput}
-                          onChange={(e) => setBannedWordInput(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === "Enter") handleAddBannedWord(); }}
-                          className="bg-black/45 w-full border border-white/10 rounded-xl px-4 py-2 text-sm text-[#e0e0e6] placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition"
-                        />
-                        <button
-                          onClick={handleAddBannedWord}
-                          className="px-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white/80 hover:text-white rounded-xl text-xs font-bold transition cursor-pointer"
-                        >
-                          AJOUTER
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Words List Tag display */}
+                  {/* Banned words */}
                   <div className="flex flex-col gap-2">
-                    <span className="text-xs font-bold text-white/50 font-mono uppercase tracking-wider">
-                      Votre liste de mots interdits ({config.bannedWords.length}) :
-                    </span>
-                    <div className="bg-black/35 border border-white/10 rounded-2xl p-4 min-h-[90px] max-h-[140px] overflow-y-auto flex flex-wrap gap-2">
-                      {config.bannedWords.length === 0 ? (
-                        <span className="text-xs text-white/25 font-medium">Aucun mot banni déclaré.</span>
-                      ) : (
-                        config.bannedWords.map((word) => (
+                    <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                      Mots-clés filtrés (Banned Words)
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Ex: insulte, spam..."
+                        value={bannedWordInput}
+                        onChange={(e) => setBannedWordInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && handleAddBannedWord()}
+                        className="bg-black/45 flex-1 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-[#e0e0e6] placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
+                      />
+                      <button
+                        onClick={handleAddBannedWord}
+                        className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20"
+                      >
+                        Ajouter
+                      </button>
+                    </div>
+                    {config.bannedWords.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {config.bannedWords.map((word) => (
                           <span
-                             key={word}
-                             className="bg-white/5 group border border-white/5 px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 text-white/85 font-medium font-sans"
+                            key={word}
+                            className="bg-rose-950/40 text-rose-300 border border-rose-900/50 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-2"
                           >
                             {word}
                             <button
                               onClick={() => handleRemoveBannedWord(word)}
-                              className="text-white/40 hover:text-red-400 cursor-pointer transition size-3.5 flex items-center justify-center rounded"
+                              className="w-4 h-4 hover:bg-rose-900/60 rounded-full flex items-center justify-center transition"
                             >
-                              <X className="w-3 h-3 stroke-2" />
+                              <X className="w-3 h-3" />
                             </button>
                           </span>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 4: Manual simulator configuration panel */}
-              {activeTab === "simulator" && (
-                <div className="flex flex-col gap-5 animate-fade-in">
-                  <div className="border-b border-white/10 pb-3">
-                    <h2 className="text-lg font-bold font-display text-white">Manual Quick Simulator Panel</h2>
-                    <p className="text-xs text-white/40 mt-1">
-                      Remplissez manuellement le formulaire pour insérer à volonté votre propre média à tester directement à l'écran.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                        Nom d'Auteur Alerte
-                      </label>
-                      <input
-                        type="text"
-                        value={simName}
-                        onChange={(e) => setSimName(e.target.value)}
-                        className="bg-black/45 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-sans text-slate-200 placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                        Nature du Document Média
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => setSimType("image")}
-                          className={`py-2 px-3 border rounded-xl text-xs font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 ${
-                            simType === "image"
-                              ? "bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/10"
-                              : "bg-black/45 border-white/10 text-white/45 hover:text-white hover:bg-white/5"
-                          }`}
-                        >
-                          <ImageIcon className="w-4 h-4" />
-                          Image / GIF
-                        </button>
-                        <button
-                          onClick={() => setSimType("video")}
-                          className={`py-2 px-3 border rounded-xl text-xs font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 ${
-                            simType === "video"
-                              ? "bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-600/10"
-                              : "bg-black/45 border-white/10 text-white/45 hover:text-white hover:bg-white/5"
-                          }`}
-                        >
-                          <VideoIcon className="w-4 h-4" />
-                          Vidéo (mp4/webm)
-                        </button>
+                        ))}
                       </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 mt-2">
+                    <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                      Action sur les mots interdits
+                    </label>
+                    <div className="flex bg-black/45 border border-white/10 rounded-xl p-1 shrink-0">
+                      <button
+                        onClick={() => setConfig({ ...config, bannedWordsAction: "block" })}
+                        className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${
+                          config.bannedWordsAction === "block" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/80"
+                        }`}
+                      >
+                        Bloquer l'alerte
+                      </button>
+                      <button
+                        onClick={() => setConfig({ ...config, bannedWordsAction: "censor" })}
+                        className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${
+                          config.bannedWordsAction === "censor" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/80"
+                        }`}
+                      >
+                        Censurer (* * *)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                        Bloquer tous les liens externes
+                      </label>
+                      <button
+                        onClick={() => setConfig({ ...config, blockLinks: !config.blockLinks })}
+                        className={`p-4 rounded-xl border text-left flex gap-3 transition-all duration-300 ${
+                          config.blockLinks
+                            ? "bg-rose-500/10 border-rose-500/50 text-rose-300"
+                            : "bg-black/45 border-white/10 text-white/45 hover:bg-white/5 hover:text-white/80"
+                        }`}
+                      >
+                        <Shield className="w-5 h-5 shrink-0" />
+                        <div>
+                          <span className="font-bold block text-sm">Bloquer les liens</span>
+                          <span className="text-[10px] opacity-70 mt-1 block">Refuse tout message contenant une URL (sauf médias).</span>
+                        </div>
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                        Bloquer médias sensibles (Spoilers)
+                      </label>
+                      <button
+                        onClick={() => setConfig({ ...config, blockNSFW: !config.blockNSFW })}
+                        className={`p-4 rounded-xl border text-left flex gap-3 transition-all duration-300 ${
+                          config.blockNSFW
+                            ? "bg-rose-500/10 border-rose-500/50 text-rose-300"
+                            : "bg-black/45 border-white/10 text-white/45 hover:bg-white/5 hover:text-white/80"
+                        }`}
+                      >
+                        <ShieldAlert className="w-5 h-5 shrink-0" />
+                        <div>
+                          <span className="font-bold block text-sm">Bloquer les Spoilers</span>
+                          <span className="text-[10px] opacity-70 mt-1 block">Bloque les médias marqués comme "spoiler" sur Discord.</span>
+                        </div>
+                      </button>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                      Contenu du Texte d'accompagnement Discord
-                    </label>
-                    <textarea
-                      value={simText}
-                      onChange={(e) => setSimText(e.target.value)}
-                      rows={2}
-                      className="bg-black/45 font-sans border border-white/10 rounded-xl p-3 text-sm text-slate-200 placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300 resize-none"
-                    />
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                      Lien HTTP Direct du média hébergé
+                      Cooldown entre les alertes (Secondes)
                     </label>
                     <input
-                      type="text"
-                      value={simMediaUrl}
-                      onChange={(e) => setSimMediaUrl(e.target.value)}
-                      placeholder="Https://images.unsplash.com/..."
-                      className="bg-black/45 font-mono border border-white/10 rounded-xl px-4 py-2.5 text-xs text-slate-200 placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
+                      type="number"
+                      min={0}
+                      value={config.cooldownSeconds || 0}
+                      onChange={(e) => setConfig({ ...config, cooldownSeconds: Number(e.target.value) })}
+                      className="bg-black/45 w-full border border-white/10 rounded-xl px-4 py-3 text-sm text-[#e0e0e6] focus:outline-none focus:border-indigo-500 transition-all"
                     />
+                    <span className="text-[10px] text-white/30">
+                      Un utilisateur ne pourra pas renvoyer d'alerte pendant cette durée. Mettre à 0 pour désactiver.
+                    </span>
                   </div>
-
-                  <button
-                    onClick={() => handleTriggerTest()}
-                    className="w-full py-3 mt-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-sm rounded-xl cursor-pointer shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2 transition active:scale-95"
-                  >
-                    <Play className="w-4 h-4 fill-current" />
-                    DECLENCHER LA SIMULATION MANUELLE
-                  </button>
                 </div>
               )}
+
             </div>
 
             {/* Bottom Actions Row to standard forms */}
-            {activeTab !== "simulator" && (
-              <div className="flex justify-end pt-6 border-t border-white/10 mt-6 shrink-0">
+            <div className="flex justify-end pt-6 border-t border-white/10 mt-6 shrink-0">
                 <button
                   type="button"
                   onClick={() => handleSaveSettings()}
@@ -806,7 +846,6 @@ export default function StreamerDashboard() {
                   )}
                 </button>
               </div>
-            )}
           </div>
         </section>
 
@@ -816,35 +855,51 @@ export default function StreamerDashboard() {
           {/* Integrated Live Observer / Preview elements */}
           <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-2xl rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col gap-3.5 sm:gap-4 relative z-10">
             <h2 className="text-md font-bold font-display text-white flex items-center gap-2">
-              <Tv className="w-4.5 h-4.5 text-indigo-400 animate-pulse" />
-              Interactive live monitor preview
+              <Tv className="w-4.5 h-4.5 text-indigo-400" />
+              Aperçu de l'overlay OBS
             </h2>
             
             {/* Embedded Live overlay layer render */}
-            <OBSOverlayView embedMode={true} />
+            <OBSOverlayView embedMode={true} onQueueChange={setPendingQueue} />
 
-            {/* Presets testing buttons grid */}
-            <div className="flex flex-col gap-2 shrink-0">
-              <span className="text-[10px] uppercase font-mono tracking-widest text-white/30 font-bold block">Testez en un clic :</span>
-              <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
-                {presets.map((p, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleTriggerTest(p)}
-                    className="p-2.5 rounded-xl border border-white/10 bg-black/40 text-left hover:bg-white/5 text-xs text-white/70 font-sans hover:text-white transition duration-300 cursor-pointer flex items-center gap-2 truncate"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                    <span className="truncate">{p.label}</span>
-                  </button>
-                ))}
+            {/* Visual Queue Manager */}
+            {pendingQueue.length > 0 && (
+              <div className="mt-2 border-t border-white/10 pt-4">
+                <h3 className="text-sm font-bold text-white mb-2 flex items-center justify-between">
+                  <span>File d'attente ({pendingQueue.length})</span>
+                </h3>
+                <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1">
+                  {pendingQueue.map((item, idx) => (
+                    <div 
+                      key={item.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, idx)}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      className="group flex items-center gap-2 bg-black/40 hover:bg-white/5 border border-white/5 hover:border-indigo-500/30 rounded-xl p-2 cursor-grab active:cursor-grabbing transition"
+                    >
+                      <GripVertical className="w-4 h-4 text-white/20 group-hover:text-white/40 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-bold text-white truncate">{item.authorName}</div>
+                        <div className="text-[10px] text-white/40 truncate">{item.text || "- Aucun texte -"}</div>
+                      </div>
+                      <button 
+                        onClick={(e) => cancelAlertFromQueue(item.id, e)}
+                        className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 opacity-0 group-hover:opacity-100 transition shrink-0"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Copyable OBS Links */}
           <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 shadow-2xl rounded-2xl sm:rounded-3xl p-3 sm:p-6 flex flex-col gap-3.5 sm:gap-4 relative z-10">
             <div>
-              <h2 className="text-md font-bold font-display text-white">Intégration OBS Streamer Links</h2>
+              <h2 className="text-md font-bold font-display text-white">Lien pour OBS</h2>
               <p className="text-[11px] text-white/40 mt-1">
                 Copiez le lien ci-dessous et ajoutez-le en tant que "Source Navigateur" (Browser Source) dans votre logiciel OBS.
               </p>
@@ -889,7 +944,7 @@ export default function StreamerDashboard() {
             <div className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-indigo-400" />
               <div>
-                <h2 className="text-lg font-bold font-display text-white">Console historique de modération</h2>
+                <h2 className="text-lg font-bold font-display text-white">Historique d'alertes</h2>
                 <p className="text-xs text-white/40">Suivi et statuts des alertes médias déclenchées par le bot Discord</p>
               </div>
             </div>
@@ -940,11 +995,6 @@ export default function StreamerDashboard() {
                             <>
                               <VideoIcon className="w-3 h-3 text-cyan-400" />
                               Vidéo
-                            </>
-                          ) : log.type === "react-player" ? (
-                            <>
-                              <Tv className="w-3 h-3 text-red-500 animate-pulse" />
-                              Media
                             </>
                           ) : log.type === "iframe" ? (
                             <>

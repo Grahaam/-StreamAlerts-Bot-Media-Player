@@ -1,71 +1,56 @@
 #!/bin/bash
 
-# Script d'installation pour Linux et macOS
-
-echo "Démarrage de l'installation..."
-
-# Vérifie si Node.js est installé
-if ! command -v node &> /dev/null
-then
-    echo "Node.js n'est pas installé. Veuillez l'installer pour continuer."
-    echo "Visitez https://nodejs.org/ pour les instructions d'installation."
-    exit 1
-fi
-
-echo "Node.js est installé."
-
-if ! command -v node &> /dev/null
-then
-    echo "Node non installé. Tentative d'installation..."
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        if command -v apt-get &> /dev/null; then
-            sudo apt-get update && sudo apt-get install -y nodejs npm
-        elif command -v yum &> /dev/null; then
-            sudo yum install -y nodejs npm
-        fi
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
+# Definition de la fonction d'installation locale de Node selon l'OS
+install_node() {
+    echo "Node.js n'est pas installe. Tentative d'installation automatique..."
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "OS detecte: macOS"
         if command -v brew &> /dev/null; then
+            echo "Installation via Homebrew..."
             brew install node
         else
-            echo "Homebrew n'est pas installé. Veuillez installer Homebrew pour continuer."
-            exit 1
+            echo "Homebrew non trouve. Telechargement de l'installateur macOS..."
+            curl -o node-installer.pkg https://nodejs.org/dist/v20.11.1/node-v20.11.1.pkg
+            sudo installer -pkg node-installer.pkg -target /
+            rm node-installer.pkg
         fi
+    elif command -v apt-get &> /dev/null; then
+        echo "OS detecte: Debian/Ubuntu (Linux)"
+        echo "Ajout du depot NodeSource et installation..."
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+    elif command -v dnf &> /dev/null || command -v yum &> /dev/null; then
+        echo "OS detecte: Fedora/RHEL/CentOS (Linux)"
+        curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+        sudo yum install -y nodejs
+    else
+        echo "Impossible de detecter votre gestionnaire de paquets automatiquement."
+        echo "Veuillez installer Node.js manuellement depuis https://nodejs.org/"
+        exit 1
     fi
+    
+    echo "Installation de Node.js terminee."
+    
+    if ! command -v node &> /dev/null; then
+        echo "Veuillez redemarrer votre terminal puis relancer ./install.sh pour continuer."
+        exit 0
+    fi
+}
+
+# Verification de la presence de node
+if ! command -v node &> /dev/null; then
+    install_node
 fi
 
-if ! command -v node &> /dev/null
-then
-    echo "Node.js n'a pas pu être installé automatiquement. Veuillez l'installer manuellement et réexécuter ce script."
-    exit 1
-fi
-echo "Node.js est installé."
-# Enregistre commandes slash
-echo "Enregistrement des commandes slash..."
-npx run register-commands.ts
-if [ $? -ne 0 ]; then
-    echo "Erreur enregistrement commandes."
-    exit 1
-fi
+echo "Version de Node installée :"
+node -v
+echo ""
 
-
-# Installation des dépendances npm
-echo "Installation des dépendances npm..."
+echo "Installation des dependances de StreamAlerts Hub..."
 npm install
-if [ $? -ne 0 ]; then
-    echo "Erreur lors de l'installation des dépendances npm."
-    exit 1
-fi
 
-echo "Dépendances npm installées avec succès."
-
-# Construction de l'application
-echo "Construction de l'application..."
+echo "Compilation de l'application..."
 npm run build
-if [ $? -ne 0 ]; then
-    echo "Erreur lors de la construction de l'application."
-    exit 1
-fi
 
-echo "Application construite avec succès."
-
-echo "Installation terminée. Vous pouvez maintenant exécuter l'application avec ./start.sh"
+echo "Installation terminee ! Vous pouvez maintenant lancer ./start.sh"

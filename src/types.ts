@@ -8,6 +8,12 @@ export interface UIConfig {
   alertStyle: "neon" | "glitch" | "cyberpunk" | "glass";
   bannedWordsAction: "block" | "censor";
   stopAlertShortcut?: string;
+  youtubeCookiesContent?: string;
+  
+  // Moderation extras
+  cooldownSeconds?: number;
+  blockLinks?: boolean;
+  blockNSFW?: boolean;
 }
 
 export interface AlertPayload {
@@ -16,7 +22,8 @@ export interface AlertPayload {
   authorAvatar: string;
   text: string;
   mediaUrl: string;
-  type: "image" | "video" | "react-player" | "iframe" | "link";
+  type: "image" | "video" | "iframe" | "link";
+  provider?: string;
   duration: number;
   neonColor: string;
   alertStyle: "neon" | "glitch" | "cyberpunk" | "glass";
@@ -30,7 +37,7 @@ export interface LogEntry {
   timestamp: number;
   author: string;
   text: string;
-  type: "image" | "video" | "react-player" | "iframe" | "link";
+  type: "image" | "video" | "iframe" | "link";
   mediaUrl: string;
   status: "approved" | "blocked" | "censored" | "error";
   reason: string;

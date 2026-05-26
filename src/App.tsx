@@ -8,7 +8,8 @@ export default function App() {
 
   // Parse path at boot
   useEffect(() => {
-    if (window.location.pathname === "/overlay") {
+    const path = window.location.pathname.replace(/\/$/, "");
+    if (path === "/overlay") {
       setIsOverlayPath(true);
     }
   }, []);

@@ -1,174 +1,55 @@
-# Discord OBS Overlay Application
+# StreamAlerts Hub
 
-A Discord-powered OBS overlay that turns Discord messages into overlay alerts. It supports both prefix commands (`!alert`) and slash commands (`/alert`).
+StreamAlerts Hub est une application conçue pour les streamers, permettant de récupérer des médias (vidéos, images, liens) depuis un salon Discord et de les afficher automatiquement en direct sur votre stream via OBS.
 
-## Features
+## 🚀 Prérequis
 
-- Real-time alert broadcasting to the OBS overlay via Socket.IO
-- Prefix command mode: `!alert`, `!help`, `!status`
-- Slash command mode: `/alert`, `/help`, `/status`
-- Media handling for images, videos, and URLs
-- Banned words filtering
-- Log history for approved / blocked / censored alerts
+Avant de commencer, assurez-vous d'avoir installé les logiciels suivants sur votre machine :
+- **[Node.js](https://nodejs.org/fr/)** (version 18 ou supérieure recommandée)
+- Assurez-vous que la commande `npm` est disponible dans votre terminal/invite de commande.
 
-## Project Structure
+## 📦 Installation
 
-- `src/`: React frontend
-- `server/`: Node.js backend
-- `server.ts`: Express + Socket.IO bootstrap
-- `register-commands.ts`: registers global slash commands
-- `settings.json`: stores the Discord token and channel configured in the dashboard
+L'application est fournie avec des scripts automatisés pour simplifier l'installation.
 
-## Prerequisites
+### 🪟 Pour Windows
+1. Double-cliquez sur le fichier `install.bat`.
+2. Attendez la fin du processus d'installation. Cela va télécharger toutes les dépendances requises et préparer l'application.
 
-- Node.js 18+
-- npm
-- A Discord bot token
-- A Discord application ID
-- A configured Discord channel ID (via the dashboard)
+### 🍎 Pour macOS / 🐧 Linux
+1. Ouvrez un terminal dans le dossier du projet.
+2. Rendez le script d'installation exécutable (si nécessaire) : `chmod +x install.sh`
+3. Exécutez le script : `./install.sh`
 
-## Installation Universelle
+*(Alternativement, vous pouvez simplement ouvrir un terminal dans le dossier et exécuter `npm install` puis `npm run build` manuellement).*
 
-Pour une installation simplifiée sur votre système, utilisez les scripts d'installation fournis.
+## 🎮 Lancement de l'application
 
-### macOS & Linux
+Une fois l'installation terminée, vous pouvez démarrer l'application.
 
-1.  Ouvrez un terminal.
-2.  Accédez au répertoire du projet.
-3.  Rendez le script d'installation exécutable :
-    ```bash
-    chmod +x install.sh
-    ```
-4.  Exécutez le script d'installation :
-    ```bash
-    ./install.sh
-    ```
+### 🪟 Pour Windows
+- Double-cliquez sur `start.bat`.
 
-### Windows
+### 🍎 Pour macOS / 🐧 Linux
+- Exécutez `./start.sh` dans votre terminal.
+- *(Ou lancez manuellement `npm start`).*
 
-1.  Ouvrez l'invite de commandes ou PowerShell.
-2.  Accédez au répertoire du projet.
-3.  Exécutez le script d'installation :
-    ```cmd
-    install.bat
-    ```
+Le serveur démarrera localement. Vous pourrez ensuite accéder au Dashboard du streamer depuis votre navigateur (généralement à l'adresse **http://localhost:3000** - l'URL exacte sera affichée dans le terminal).
 
-Ces scripts installeront les dépendances nécessaires et construiront l'application.
+## ⚙️ Configuration initiale (Tutoriel)
 
-## Exécuter l'application
+Lors de votre première connexion au Dashboard, un **tutoriel interactif** s'affichera pour vous guider. Voici les étapes principales :
 
-Pour démarrer l'application après l'installation :
+1. **Liaison Discord** : Allez dans l'onglet des paramètres Discord du Dashboard. Renseignez l'ID de votre salon textuel et le Token de votre Bot Discord.
+2. **OBS Studio** : Dans la section "Lien pour OBS" du Dashboard, copiez l'URL fournie.
+3. Allez dans OBS, ajoutez une nouvelle **"Source Navigateur" (Browser Source)**.
+4. Collez l'URL.
+5. Ajustez la taille (ex: 1920x1080) selon la résolution de l'intégration souhaitée.
+6. **Important** : Cochez la case *"Désactiver la source quand elle n'est pas visible (Shutdown source when not visible)"* ou une option similaire pour la gestion des caches.
 
-### macOS & Linux
+## 🧪 Tester l'overlay
 
-```bash
-chmod +x start.sh
-./start.sh
-```
+Vous pouvez utiliser le bouton "Simuler" en bas de l'onglet du panneau de liaison OBS pour envoyer une fausse alerte sur votre overlay et vérifier que le rendu correspond bien à vos attentes sur OBS !
 
-### Windows
-
-```cmd
-start.bat
-```
-
-L'interface utilisateur sera disponible à `http://localhost:3000/`.
-
-## Configure the Discord bot
-
-1. Go to the [Discord Developer Portal](https://discord.com/developers/applications).
-2. Create a new application.
-3. Open **Bot** and add the bot.
-4. Copy the bot token.
-5. Open **OAuth2 > URL Generator**.
-6. Select **bot**.
-7. Grant permissions for **View Channels**, **Read Messages**, and **Send Messages**.
-8. Copy the generated invite URL and add the bot to your Discord server.
-
-## Configure the bot inside the dashboard
-
-1. Start the app with `npm run dev`.
-2. Open `http://localhost:3000/`.
-3. Paste your Discord bot token in the dashboard.
-4. Paste the target channel ID.
-5. Save the settings.
-
-The server will reconnect automatically using the saved token and channel.
-
-## Quick start
-
-1. Make sure your bot token and application ID are in `.env.local`:
-
-```env
-DISCORD_TOKEN=your_discord_bot_token
-APPLICATION_ID=your_discord_application_id
-```
-
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Register the global slash commands:
-
-```bash
-npm run register-commands
-```
-
-4. Start the app:
-
-```bash
-npm run dev
-```
-
-5. Open `http://localhost:3000/` and configure the Discord token + channel in the dashboard if needed.
-
-6. In Discord, use:
-
-```text
-/alert
-/help
-/status
-```
-
-If the registration fails, check that `DISCORD_TOKEN` and `APPLICATION_ID` are present.
-
-## Command usage
-
-### Prefix commands
-
-```text
-!alert Nice stream message
-!help
-!status
-```
-
-### Slash commands
-
-```text
-/alert message: Nice stream message
-/help
-/status
-```
-
-## OBS setup
-
-1. Start the app.
-2. In OBS, add a **Browser Source**.
-3. Set the URL to `http://localhost:3000/`.
-4. Enable **Refresh browser when scene becomes active**.
-5. Resize and position the source as needed.
-
-## Build for production
-
-```bash
-npm run build
-npm run start
-```
-
-## Notes
-
-- Slash command registration uses the values from `.env.local`.
-- The app runtime uses the token stored in `settings.json` from the dashboard.
-- The bot keeps both command styles available, so you can migrate gradually.
+---
+*Développé pour les streamers, avec amour 💜*
