@@ -61,7 +61,7 @@ export default function OBSOverlayView({ embedMode = false, onQueueChange }: { e
     });
 
     socket.on("skip_alert", () => {
-      console.log("🛑 Alert stopped by remote shortcut / dashboard");
+      console.log("[Overlay] Alert stopped by remote shortcut / dashboard");
       if (cancelCurrentAlertRef.current) {
         cancelCurrentAlertRef.current();
       }
@@ -86,7 +86,7 @@ export default function OBSOverlayView({ embedMode = false, onQueueChange }: { e
         (configKey.toLowerCase() === "escape" && e.key === "Escape");
 
       if (matchesKey) {
-        console.log("🛑 Alert stopped by keyboard shortcut:", configKey);
+        console.log("[Overlay] Alert stopped by keyboard shortcut:", configKey);
         e.preventDefault();
         e.stopPropagation();
         if (cancelCurrentAlertRef.current) {
@@ -116,7 +116,7 @@ export default function OBSOverlayView({ embedMode = false, onQueueChange }: { e
         img.src = item.mediaUrl;
         img.onload = () => {
           setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
-          console.log(`✅ Cached Image: ${item.mediaUrl}`);
+          console.log(`[Overlay] Cached Image: ${item.mediaUrl}`);
         };
         img.onerror = () => {
           // Fallback to true so we don't stall standard rendering
@@ -138,7 +138,7 @@ export default function OBSOverlayView({ embedMode = false, onQueueChange }: { e
           const target = e.target as HTMLVideoElement;
           console.log(`[Video Preload Debug] onCanPlayThrough - ID: ${item.id}, videoWidth: ${target.videoWidth}, videoHeight: ${target.videoHeight}`);
           setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
-          console.log(`✅ Cached Video: ${item.mediaUrl}`);
+          console.log(`[Overlay] Cached Video: ${item.mediaUrl}`);
         };
         video.onerror = (e: any) => {
           const target = e.target as HTMLVideoElement;
@@ -301,7 +301,7 @@ export default function OBSOverlayView({ embedMode = false, onQueueChange }: { e
         embedMode 
           ? "w-full h-full min-h-[280px] sm:min-h-[460px] bg-black/40 border-4 border-dashed border-white/5 rounded-3xl p-1.5 sm:p-6" 
           : "w-screen h-screen bg-transparent p-0 m-0"
-      }`}
+      } ${!embedMode && activeAlert ? "pointer-events-auto" : !embedMode ? "pointer-events-none" : ""}`}
       style={{ background: embedMode ? undefined : "transparent" }}
     >
       {/* Immersive Atmospheric decorations matching design prototype */}
@@ -571,13 +571,13 @@ export default function OBSOverlayView({ embedMode = false, onQueueChange }: { e
                   />
                   {activeAlert.provider === "instagram" && (
                      <div className="absolute top-4 left-4 right-4 bg-red-600/90 text-white text-sm p-3 rounded-xl shadow-lg z-20 backdrop-blur-md border border-red-500 animate-in fade-in slide-in-from-top-4 pointer-events-none">
-                        <p className="font-bold mb-1">⚠️ Autoplay Blocked by Instagram</p>
+                        <p className="font-bold mb-1">[Avertissement] Autoplay Blocked by Instagram</p>
                         <p className="opacity-90 leading-tight">Instagram blocks automated video downloads without a login. To enable native MP4 autoplay for Instagram reels, please upload a <code>cookies.txt</code> file to the root directory.</p>
                      </div>
                   )}
                   {activeAlert.provider === "tiktok" && (
                      <div className="absolute top-4 left-4 right-4 bg-orange-600/90 text-white text-sm p-3 rounded-xl shadow-lg z-20 backdrop-blur-md border border-orange-500 animate-in fade-in slide-in-from-top-4 pointer-events-none">
-                        <p className="font-bold mb-1">⚠️ TikTok Page Embed</p>
+                        <p className="font-bold mb-1">[Avertissement] TikTok Page Embed</p>
                         <p className="opacity-90 leading-tight">Direct video extraction failed. Showing standard browser embedded player which may require clicking to play.</p>
                      </div>
                   )}

@@ -78,7 +78,7 @@ async function runServer() {
         updatedSettings.discordToken !== originalToken ||
         updatedSettings.channelId !== originalChannel
       ) {
-        console.log("⚙️ Token or Channel ID altered: re-initialising Discord worker...");
+        console.log("[Server] Token or Channel ID altered: re-initialising Discord worker...");
         botManager.connectBot(updatedSettings.discordToken, updatedSettings.channelId).catch(() => {});
       }
 
@@ -129,7 +129,7 @@ async function runServer() {
       id: "test_" + Math.random().toString(36).substring(2, 11),
       authorName: authorName || "Viewer_Random_99",
       authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=128&q=80",
-      text: text || "Regardez ce clip incroyable que je viens de faire sur le stream de ce soir ! 🔥",
+      text: text || "Regardez ce clip que je viens de faire sur le stream !",
       mediaUrl: mediaUrl || "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1280&auto=format&fit=crop",
       type: type || "image",
       duration: duration || settingsManager.settings.alertDuration,
@@ -292,8 +292,8 @@ async function runServer() {
 
   // Start the composite Server
   httpServer.listen(PORT, "0.0.0.0", () => {
-    console.log(`🚀 Stream OBS server active on port ${PORT}`);
-    console.log(`📡 WebSocket server mapped. Client connections ready.`);
+    console.log(`[Server] Stream OBS server active on port ${PORT}`);
+    console.log(`[Server] WebSocket server mapped. Client connections ready.`);
   });
 }
 

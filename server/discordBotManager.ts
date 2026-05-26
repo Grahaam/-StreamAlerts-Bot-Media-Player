@@ -22,7 +22,7 @@ export class DiscordBotManager {
 
     this.status = "connecting";
     this.errorMsg = "";
-    console.log(`🤖 Starting Discord Client login on channel: ${channelId}...`);
+    console.log(`[Discord] Starting Discord Client login on channel: ${channelId}...`);
 
     try {
       this.client = new Client({
@@ -37,11 +37,11 @@ export class DiscordBotManager {
         this.status = "connected";
         this.botUser = this.client?.user?.tag || "Unknown Bot";
         this.errorMsg = "";
-        console.log(`✅ discord.js connected as ${this.botUser}`);
+        console.log(`[Discord] Connected as ${this.botUser}`);
       });
 
       this.client.on("error", (err) => {
-        console.error("❌ Discord websocket exception:", err);
+        console.error("[Discord] WebSocket exception:", err);
         this.status = "error";
         this.errorMsg = err.message || "Discord WebSocket exception";
       });
@@ -57,7 +57,7 @@ export class DiscordBotManager {
             const now = Date.now();
             const diff = (now - lastTime) / 1000;
             if (diff < cooldown) {
-              console.warn(`⏳ Blocked message from ${message.author.username} due to cooldown.`);
+              console.warn(`[Discord] Blocked message from ${message.author.username} due to cooldown.`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
@@ -81,7 +81,7 @@ export class DiscordBotManager {
           if (attachment) {
             const sizeMB = attachment.size / (1024 * 1024);
             if (sizeMB > settingsManager.settings.mediaMaxSizeMB) {
-              console.warn(`🛑 File size ${sizeMB.toFixed(2)}MB exceeds settings threshold: ${settingsManager.settings.mediaMaxSizeMB}MB`);
+              console.warn(`[Discord] File size ${sizeMB.toFixed(2)}MB exceeds settings threshold: ${settingsManager.settings.mediaMaxSizeMB}MB`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
@@ -117,7 +117,7 @@ export class DiscordBotManager {
               resolvedType = "video";
               mediaUrl = attachment.url;
             } else {
-              console.warn(`🛑 Rejected unsupported attachment mimetype: ${mime}`);
+              console.warn(`[Discord] Rejected unsupported attachment mimetype: ${mime}`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
@@ -148,7 +148,7 @@ export class DiscordBotManager {
 
           const textCheck = processBannedWords(message.content);
           if (textCheck.wasBlocked) {
-            console.warn(`🛑 Blocked message from ${message.author.username} due to banned keyword`);
+            console.warn(`[Discord] Blocked message from ${message.author.username} due to banned keyword`);
             logManager.addLog({
               author: message.author.username,
               text: message.content,
@@ -175,7 +175,7 @@ export class DiscordBotManager {
             const remainingMatches = finalText.match(urlRegex) || [];
             
             if (remainingMatches.length > 0) {
-              console.warn(`🛑 Blocked message from ${message.author.username} due to containing extra links`);
+              console.warn(`[Discord] Blocked message from ${message.author.username} due to containing extra links`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
@@ -194,7 +194,7 @@ export class DiscordBotManager {
             const hasNSFWText = finalText.toLowerCase().includes("nsfw");
 
             if (hasSpoilerAttachment || hasNSFWText) {
-              console.warn(`🛑 Blocked message from ${message.author.username} due to NSFW detection`);
+              console.warn(`[Discord] Blocked message from ${message.author.username} due to NSFW detection`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
@@ -234,16 +234,16 @@ export class DiscordBotManager {
           });
 
           globalThis.io.emit("new_alert", alertPayload);
-          console.log(`🔔 New Alert broadcasted for streamer overlay! Author: ${alertPayload.authorName}`);
+          console.log(`[Alerts] New Alert broadcasted for streamer overlay! Author: ${alertPayload.authorName}`);
 
         } catch (msgErr) {
-          console.error("❌ Exception inside messageCreate handler:", msgErr);
+          console.error("[Discord] Exception inside messageCreate handler:", msgErr);
         }
       });
 
       await this.client.login(token);
     } catch (err: any) {
-      console.error("❌ Discord client connection initial failure:", err);
+      console.error("[Discord] Client connection initial failure:", err);
       this.status = "error";
       this.errorMsg = err.message || "Failed client connection login.";
       this.botUser = "";
@@ -255,7 +255,7 @@ export class DiscordBotManager {
       try {
         await this.client.destroy();
       } catch (err) {
-        console.error("⚠️ Failed destroying old discord ws connection:", err);
+        console.error("[Discord] Failed destroying old discord ws connection:", err);
       }
       this.client = null;
     }

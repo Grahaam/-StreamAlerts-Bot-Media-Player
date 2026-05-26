@@ -115,7 +115,7 @@ export default function StreamerDashboard() {
 
   // Form states for custom simulator triggers
   const [simName, setSimName] = useState("Viewer_Lucky_Hype");
-  const [simText, setSimText] = useState("Un clip de fou furieux sur le boss final ce soir ! GG 🏆✨");
+  const [simText, setSimText] = useState("Un clip sur le boss final ce soir ! GG");
   const [simType, setSimType] = useState<"image" | "video">("image");
   const [simMediaUrl, setSimMediaUrl] = useState("https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1280&auto=format&fit=crop");
 
@@ -184,7 +184,7 @@ export default function StreamerDashboard() {
         (configKey.toLowerCase() === "escape" && e.key === "Escape");
 
       if (matchesKey) {
-        console.log("🛑 Global shortcut triggered from Dashboard. Skipping alert...");
+        console.log("[Dashboard] Global shortcut triggered from Dashboard. Skipping alert...");
         e.preventDefault();
         try {
           await fetch("/api/skip-alert", { method: "POST" });
@@ -320,7 +320,7 @@ export default function StreamerDashboard() {
     {
       label: "Vidéo Boucle Synthwave",
       authorName: "Neon_Pilot_88",
-      text: "L'esthétique de ton stream de ce soir est tout simplement incroyable. Ambiance rétro au max ! 📼💜",
+      text: "Ton stream de ce soir est très intéressant.",
       type: "video",
       mediaUrl: "https://assets.mixkit.co/videos/preview/mixkit-retro-futuristic-grid-background-with-laser-lights-42582-large.mp4"
     },
@@ -334,7 +334,7 @@ export default function StreamerDashboard() {
     {
       label: "Vibe Relax Calme",
       authorName: "ZenStreamer",
-      text: "Une stream chill... parfait pour un vendredi soir tranquille 🛋️☕",
+      text: "Un stream chill ce soir.",
       type: "image",
       mediaUrl: "https://images.unsplash.com/photo-1518495973542-4542c06a5843?q=80&w=1280&auto=format&fit=crop"
     }

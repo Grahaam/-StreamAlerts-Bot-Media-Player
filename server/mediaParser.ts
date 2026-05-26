@@ -114,7 +114,7 @@ export async function resolveMediaFromLink(url: string): Promise<{ type: "image"
         }
       }
     } catch (err: any) {
-      console.warn("⚠️ yt-dlp extraction/download failed:", err.message);
+      console.warn("[MediaParser] yt-dlp extraction/download failed:", err.message);
       outputYtError = err.message || "yt-dlp default fallback error";
     }
   }
@@ -157,7 +157,7 @@ export async function resolveMediaFromLink(url: string): Promise<{ type: "image"
       }
     }
   } catch (err) {
-    console.warn("⚠️ link-preview-js retrieval timed out:", url);
+    console.warn("[MediaParser] link-preview-js retrieval timed out:", url);
   }
 
   return { ...quick, title: "", ytDlpError: outputYtError };

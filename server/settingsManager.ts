@@ -66,13 +66,13 @@ export class SettingsManager {
         this.settings.youtubeCookiesContent = fs.readFileSync(cookiesFile, "utf-8");
       }
 
-      console.log("⚙️ Settings loaded securely (tokens mapped from env).");
+      console.log("[Settings] Loaded securely (tokens mapped from env).");
       
       if (!fs.existsSync(SETTINGS_FILE)) {
         this.saveSettings(this.settings);
       }
     } catch (err) {
-      console.error("⚠️ Failed to load settings, using defaults.", err);
+      console.error("[Settings] Failed to load settings, using defaults.", err);
     }
   }
 
@@ -89,12 +89,12 @@ export class SettingsManager {
       
       this.settings = { ...newSettings };
       
-      console.log("⚙️ Settings saved successfully (secrets secured).");
+      console.log("[Settings] Saved successfully (secrets secured).");
       
       // 4. Sycn Cookies to cookies.txt natively
       this.syncCookiesFile();
     } catch (err) {
-      console.error("⚠️ Failed to save settings on disk.", err);
+      console.error("[Settings] Failed to save settings on disk.", err);
     }
   }
 
@@ -119,7 +119,7 @@ export class SettingsManager {
       
       fs.writeFileSync(ENV_FILE, envContent.trim() + "\n", "utf8");
     } catch (e) {
-      console.error("⚠️ Could not write to .env", e);
+      console.error("[Settings] Could not write to .env", e);
     }
   }
 
@@ -142,7 +142,7 @@ export class SettingsManager {
       
       fs.writeFileSync(cookiesFile, finalContent, "utf-8");
     } catch (err) {
-      console.error("⚠️ Failed to sync cookies.txt.", err);
+      console.error("[Settings] Failed to sync cookies.txt.", err);
     }
   }
 }
