@@ -7,7 +7,7 @@ export function processBannedWords(text: string): { processed: string; wasCensor
 
   for (const word of settingsManager.settings.bannedWords) {
     if (!word || !word.trim()) continue;
-    // Build check
+
     const escaped = word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
     const regex = new RegExp(escaped, "gi");
 

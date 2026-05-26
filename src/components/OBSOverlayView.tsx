@@ -1,8 +1,27 @@
 import { useState, useEffect, useRef } from "react";
-import { io, Socket } from "socket.io-client";
+import { socket } from "../socket";
 import ReactPlayer from "react-player";
 import { Tv, Bot, Flame, AlertTriangle } from "lucide-react";
 import { AlertPayload, Sparkle } from "../types";
+
+const LOG_PREFIX = "OverlayView:";
+
+function isVerticalMedia(alert: AlertPayload | null) {
+	if (!alert) return false;
+
+	const normalizedUrl = alert.mediaUrl.toLowerCase();
+
+	return (
+		alert.provider === "tiktok" ||
+		alert.provider === "instagram" ||
+		alert.provider === "youtube-shorts" ||
+		normalizedUrl.includes("tiktok") ||
+		normalizedUrl.includes("instagram") ||
+		normalizedUrl.includes("/shorts/")
+	);
+}
+
+const ReactPlayerComponent = ReactPlayer as any;
 
 export default function OBSOverlayView({
 	embedMode = false,
@@ -18,17 +37,32 @@ export default function OBSOverlayView({
 	const [preloadedUrls, setPreloadedUrls] = useState<Record<string, boolean>>(
 		{},
 	);
+	const preloadingRef = useRef<Set<string>>(new Set());
 	const [particles, setParticles] = useState<Sparkle[]>([]);
+	const [debugMode, setDebugMode] = useState(false);
+	const [iframeStyle, setIframeStyle] = useState({
+		scale: 1,
+		offsetX: 0,
+		offsetY: 0,
+	});
 	const activeVideoRef = useRef<HTMLVideoElement | null>(null);
 	const reactPlayerRef = useRef<any>(null);
+	const stateRef = useRef({ queue, activeAlert });
+	const isProcessingRef = useRef(false);
+
+	useEffect(() => {
+		stateRef.current = { queue, activeAlert };
+	}, [queue, activeAlert]);
+
 	const onVideoEndedRef = useRef<(() => void) | null>(null);
 	const onVideoErrorRef = useRef<(() => void) | null>(null);
+	const onMediaLoadedRef = useRef<(() => void) | null>(null);
 	const onVideoLoadedMetadataRef = useRef<
 		((durationMs: number) => void) | null
 	>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
-	const socketRef = useRef<Socket | null>(null);
 	const [currentDuration, setCurrentDuration] = useState(8000);
+	const backgroundVideoRef = useRef<HTMLVideoElement | null>(null);
 	const cancelCurrentAlertRef = useRef<(() => void) | null>(null);
 	const extendCurrentTimeoutRef = useRef<((durationMs: number) => void) | null>(
 		null,
@@ -36,46 +70,112 @@ export default function OBSOverlayView({
 
 	// Handle connection & events
 	useEffect(() => {
-		// Connect to host socket
-		const socket = io(window.location.origin, {
-			reconnection: true,
-			reconnectionAttempts: Infinity,
-			reconnectionDelay: 1000,
-			reconnectionDelayMax: 5000,
-		});
+		const updateStatus = () => {
+			if (socket.connected) {
+				setWsStatus("connected");
+			} else {
+				setWsStatus("connecting");
+			}
+		};
 
-		socketRef.current = socket;
+		updateStatus();
 
-		socket.on("connect", () => {
+		const onConnect = () => {
 			setWsStatus("connected");
-			console.log("🔌 Overlay Socket Connected.");
-		});
+			debugMode && console.log(LOG_PREFIX, "Socket connected");
+			// Restore state
+			const cachedState = localStorage.getItem("overlayState");
+			if (cachedState) {
+				const { queue: cachedQueue, activeAlert: cachedActiveAlert } =
+					JSON.parse(cachedState);
+				if (cachedQueue) setQueue(cachedQueue);
+				if (cachedActiveAlert) setActiveAlert(cachedActiveAlert);
+				localStorage.removeItem("overlayState");
+			}
+		};
 
-		socket.on("disconnect", () => {
+		const onDisconnect = () => {
 			setWsStatus("disconnected");
-			console.log("🔌 Overlay Socket Disconnected.");
-		});
+			debugMode && console.log(LOG_PREFIX, "Socket disconnected");
+			// Cache state
+			localStorage.setItem("overlayState", JSON.stringify(stateRef.current));
+		};
 
-		socket.on("connect_error", () => {
+		const onConnectError = () => {
 			setWsStatus("connecting");
-		});
+		};
+
+		socket.on("connect", onConnect);
+		socket.on("disconnect", onDisconnect);
+		socket.on("connect_error", onConnectError);
 
 		// Capture incoming discord & simulated alerts
 		socket.on("new_alert", (alert: AlertPayload) => {
+			debugMode &&
+				console.log(LOG_PREFIX, "🔔 New alert received:", {
+					id: alert.id,
+					type: alert.type,
+					provider: alert.provider,
+					mediaUrl: alert.mediaUrl,
+					authorName: alert.authorName,
+					timestamp: alert.timestamp,
+				});
 			setQueue((prev) => [...prev, alert]);
 		});
 
+		socket.on("force_play", () => {
+			debugMode && console.log(LOG_PREFIX, "▶️ Force play triggered.");
+			if (activeVideoRef.current) {
+				activeVideoRef.current.play().catch((e) => debugMode && console.error(LOG_PREFIX, "❌ Error during force play:", e));
+			}
+			const internalPlayer = reactPlayerRef.current?.getInternalPlayer?.();
+			if (internalPlayer && typeof internalPlayer.playVideo === "function") {
+				internalPlayer.playVideo();
+			}
+		});
+
 		socket.on("skip_alert", () => {
-			console.log("🛑 Alert stopped by remote shortcut / dashboard");
+			debugMode && console.log(LOG_PREFIX, "🛑 Alert skipped by remote command.");
 			if (cancelCurrentAlertRef.current) {
 				cancelCurrentAlertRef.current();
 			}
 		});
 
+		socket.on(
+			"update_iframe_style",
+			(style: {
+				iframeScale: number;
+				iframeOffsetX: number;
+				iframeOffsetY: number;
+			}) => {
+				setIframeStyle({
+					scale: style.iframeScale,
+					offsetX: style.iframeOffsetX,
+					offsetY: style.iframeOffsetY,
+				});
+			},
+		);
+
 		return () => {
-			socket.close();
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+			socket.off("connect_error", onConnectError);
+			socket.off("new_alert");
+			socket.off("skip_alert");
+			socket.off("update_iframe_style");
 		};
 	}, []);
+
+	// Initialize iframe style when alert changes
+	useEffect(() => {
+		if (activeAlert) {
+			setIframeStyle({
+				scale: activeAlert.iframeScale || 1,
+				offsetX: activeAlert.iframeOffsetX || 0,
+				offsetY: activeAlert.iframeOffsetY || 0,
+			});
+		}
+	}, [activeAlert]);
 
 	// Listen to keyboard shortcut to skip/force stop active alerts
 	useEffect(() => {
@@ -97,7 +197,7 @@ export default function OBSOverlayView({
 				(configKey.toLowerCase() === "escape" && key === "Escape");
 
 			if (matchesKey) {
-				console.log("🛑 Alert stopped by keyboard shortcut:", configKey);
+				debugMode && console.log(LOG_PREFIX, "Alert skipped via shortcut:", configKey);
 				e.preventDefault();
 				e.stopPropagation();
 				if (cancelCurrentAlertRef.current) {
@@ -112,12 +212,19 @@ export default function OBSOverlayView({
 		};
 	}, [activeAlert]);
 
-	// Media Look-Ahead Preloading Engine
+	// Preload media
 	useEffect(() => {
 		queue.forEach((item) => {
-			if (preloadedUrls[item.mediaUrl]) return;
+			if (
+				preloadedUrls[item.mediaUrl] ||
+				preloadingRef.current.has(item.mediaUrl)
+			)
+				return;
 
-			console.log(`⏳ Preloading media resource: ${item.mediaUrl}`);
+			preloadingRef.current.add(item.mediaUrl);
+			debugMode &&
+				console.log(LOG_PREFIX, `Preloading: ${item.mediaUrl} (${item.type})`);
+
 			if (
 				item.type === "react-player" ||
 				item.type === "iframe" ||
@@ -130,13 +237,12 @@ export default function OBSOverlayView({
 				img.src = item.mediaUrl;
 				img.onload = () => {
 					setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
-					console.log(`✅ Cached Image: ${item.mediaUrl}`);
+					debugMode && console.log(LOG_PREFIX, `Image cached: ${item.mediaUrl}`);
 				};
 				img.onerror = () => {
-					// Fallback to true so we don't stall standard rendering
 					setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
 				};
-			} else {
+			} else if (item.type === "video") {
 				const video = document.createElement("video");
 				video.src = item.mediaUrl;
 				video.preload = "auto";
@@ -144,21 +250,24 @@ export default function OBSOverlayView({
 
 				video.oncanplaythrough = () => {
 					setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
-					console.log(`✅ Cached Video: ${item.mediaUrl}`);
+					debugMode && console.log(LOG_PREFIX, `Video cached: ${item.mediaUrl}`);
 				};
 				video.onerror = () => {
-					// Fallback
 					setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
 				};
+			} else {
+				// Unknown type, mark as "preloaded" to avoid infinite retry
+				setPreloadedUrls((prev) => ({ ...prev, [item.mediaUrl]: true }));
 			}
 		});
 	}, [queue, preloadedUrls]);
 
-	// Queue Processing Motor
+	// Process queue
 	useEffect(() => {
-		if (isPlaying || queue.length === 0) return;
+		if (isPlaying || queue.length === 0 || isProcessingRef.current) return;
 
 		const runNextAlert = async () => {
+			isProcessingRef.current = true;
 			setIsPlaying(true);
 			const nextItem = { ...queue[0] };
 
@@ -189,19 +298,40 @@ export default function OBSOverlayView({
 			}
 			setParticles(newSparkles);
 			setActiveAlert(nextItem);
+			debugMode &&
+				console.log(LOG_PREFIX, "Playing alert:", {
+					id: nextItem.id,
+					type: nextItem.type,
+					provider: nextItem.provider,
+					mediaUrl: nextItem.mediaUrl,
+					duration: nextItem.duration,
+					isVertical: isVerticalMedia(nextItem),
+				});
 
 			// Simple artificial lag to let state shift and cache complete
 			await new Promise((r) => setTimeout(r, 150));
 
 			// If video, play it
-			if (nextItem.type === "video" && activeVideoRef.current) {
-				try {
-					activeVideoRef.current.currentTime = 0;
-					activeVideoRef.current
-						.play()
-						.catch((e) => console.log("Video auto playback audio notice:", e));
-				} catch (err) {
-					console.error("Video element failed booting playback:", err);
+			if (nextItem.type === "video") {
+				if (activeVideoRef.current) {
+					try {
+						activeVideoRef.current.currentTime = 0;
+						activeVideoRef.current
+							.play()
+							.catch((e) => debugMode && console.log(LOG_PREFIX, "Video playback notice:", e));
+					} catch (err) {
+						console.error(LOG_PREFIX, "Video element failed playback:", err);
+					}
+				}
+				if (backgroundVideoRef.current) {
+					try {
+						backgroundVideoRef.current.currentTime = 0;
+						backgroundVideoRef.current
+							.play()
+							.catch((e) => debugMode && console.log(LOG_PREFIX, "Background video playback notice:", e));
+					} catch (err) {
+						console.error(LOG_PREFIX, "Background video element failed playback:", err);
+					}
 				}
 			}
 
@@ -212,8 +342,10 @@ export default function OBSOverlayView({
 			});
 
 			let timeoutId: any = null;
+			let loadingTimeoutId: any = null;
 
 			const finishAlert = () => {
+				if (loadingTimeoutId) clearTimeout(loadingTimeoutId);
 				if (timeoutId) clearTimeout(timeoutId);
 				onVideoEndedRef.current = null;
 				onVideoErrorRef.current = null;
@@ -232,6 +364,25 @@ export default function OBSOverlayView({
 
 			cancelCurrentAlertRef.current = finishAlert;
 			extendCurrentTimeoutRef.current = extendTimeout;
+			onMediaLoadedRef.current = () => {
+				if (loadingTimeoutId) {
+					clearTimeout(loadingTimeoutId);
+					loadingTimeoutId = null;
+				}
+			};
+
+			loadingTimeoutId = setTimeout(() => {
+				debugMode &&
+					console.log(LOG_PREFIX, `Media still loading (timeout): ${nextItem.mediaUrl}`);
+				// If it's still loading after 30s and it's not a video (which might be huge),
+				// we skip to avoid blocking the stream
+				if (nextItem.type !== "video") {
+					debugMode && console.log(
+						"Media loading timeout, skipping alert",
+					);
+					finishAlert();
+				}
+			}, 30000);
 
 			let defaultDuration = nextItem.duration || 8000;
 
@@ -260,12 +411,20 @@ export default function OBSOverlayView({
 
 			// Pause active element safely
 			if (activeVideoRef.current) {
-				activeVideoRef.current.pause();
+				try {
+					activeVideoRef.current.pause();
+				} catch (e) {}
+			}
+			if (backgroundVideoRef.current) {
+				try {
+					backgroundVideoRef.current.pause();
+				} catch (e) {}
 			}
 
 			// Allow CSS transitions to play before loading next cue item
 			await new Promise((r) => setTimeout(r, 1000));
 			setIsPlaying(false);
+			isProcessingRef.current = false;
 		};
 
 		runNextAlert();
@@ -295,7 +454,7 @@ export default function OBSOverlayView({
 			className={`relative flex items-center justify-center overflow-hidden transition-all duration-300 ${
 				embedMode
 					? "w-full h-full min-h-[280px] sm:min-h-[460px] bg-black/40 border-4 border-dashed border-white/5 rounded-3xl p-1.5 sm:p-6"
-					: "w-screen h-screen bg-transparent p-0 m-0"
+					: "absolute inset-0 w-full h-full bg-transparent p-0 m-0"
 			}`}
 			style={{ background: embedMode ? undefined : "transparent" }}
 		>
@@ -308,22 +467,39 @@ export default function OBSOverlayView({
 					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-indigo-600/10 blur-[80px] rounded-full pointer-events-none z-0"></div>
 				</>
 			)}
-			{/* 1. Subtle Socket.io Status indicator (Auto-hide in OBS, only displays on reconnecting states in overlays) */}
+			{/* Socket Status (only shows when disconnected) */}
 			{wsStatus !== "connected" && !embedMode && (
 				<div className="absolute top-4 right-4 z-50 flex items-center gap-2 bg-slate-950/90 text-amber-500 border border-amber-500/30 px-3 py-1.5 rounded-full text-xs font-mono select-none animate-pulse">
 					<AlertTriangle className="w-4.5 h-4.5" />
-					<span>OBS Link: Reconnecting WS...</span>
+					<span>Reconnecting...</span>
 				</div>
 			)}
 
-			{/* 2. Particle Sparks Canvas background layered only when alert state is active */}
+			{embedMode && (
+				<button
+					onClick={() => setDebugMode(!debugMode)}
+					className="absolute top-4 left-4 z-50 bg-slate-950/80 text-white text-[10px] px-2 py-1 rounded border border-white/10"
+				>
+					Debug: {debugMode ? "ON" : "OFF"}
+				</button>
+			)}
+
+			{debugMode && embedMode && activeAlert && (
+				<div className="absolute top-16 left-4 z-50 bg-slate-950/90 text-green-400 text-[10px] p-3 rounded border border-green-500/30 font-mono max-w-sm">
+					<p>ID: {activeAlert.id}</p>
+					<p>URL: {activeAlert.mediaUrl}</p>
+					<p>Playing: {isPlaying ? "Yes" : "No"}</p>
+				</div>
+			)}
+
+			{/* Background particles */}
 			{activeAlert && (
-				<div className="absolute inset-x-0 bottom-1/2 translate-y-24 pointer-events-none flex justify-center z-10">
-					<div className="relative w-[500px] h-[50px]">
+				<div className="absolute inset-0 pointer-events-none flex justify-center z-10 overflow-hidden">
+					<div className="relative w-full h-full">
 						{particles.map((spark) => (
 							<span
-								key={spark.id}
-								className="absolute sparkle-particle rounded-full pointer-events-none"
+								key={`spark-${activeAlert.id}-${spark.id}`}
+								className="absolute sparkle-particle rounded-full"
 								style={
 									{
 										left: "50%",
@@ -344,31 +520,30 @@ export default function OBSOverlayView({
 				</div>
 			)}
 
-			{/* 3. Primary Alert Box Render Container */}
+			{/* Alert Box */}
 			{(() => {
 				const isVertical =
 					activeAlert &&
-					(activeAlert.mediaUrl.includes("tiktok.com") ||
-						activeAlert.mediaUrl.includes("tiktokcdn.com") ||
-						activeAlert.mediaUrl.includes("tiktokcdn-us.com") ||
-						activeAlert.mediaUrl.includes("instagram.com") ||
-						activeAlert.mediaUrl.includes("shorts"));
+					(activeAlert.mediaUrl.toLowerCase().includes("tiktok") ||
+						activeAlert.mediaUrl.toLowerCase().includes("instagram") ||
+						activeAlert.mediaUrl.toLowerCase().includes("shorts"));
 				return (
 					<div
 						ref={contentRef}
-						className={`relative z-20 transition-all duration-700 select-none mx-auto ${
+						className={`relative z-20 transition-all duration-700 select-none ${
 							embedMode
-								? `w-full ${isVertical ? "max-w-sm sm:max-w-md" : "max-w-xl sm:max-w-2xl"} p-1 sm:p-8`
-								: `w-[100vw] h-[100vh] p-0 flex flex-col overflow-hidden`
+								? `w-full ${isVertical ? "max-w-lg sm:max-w-xl" : "max-w-2xl"} p-2 sm:p-8 mx-auto`
+								: `w-full h-full p-0 flex items-center justify-center`
 						} ${
 							activeAlert
-								? "translate-y-0 scale-100 opacity-100 rotate-0"
-								: "translate-y-16 scale-90 opacity-0 rotate-1 select-none pointer-events-none"
+								? "translate-y-0 scale-100 opacity-100"
+								: "translate-y-12 scale-95 opacity-0 pointer-events-none"
 						}`}
 					>
 						{activeAlert && (
 							<div
-								className={`relative flex flex-col text-white overflow-hidden transition-all duration-300 w-full ${!embedMode ? "h-full rounded-none border-none" : "rounded-2xl p-4 sm:p-6 gap-3 sm:gap-4"} ${
+								key={`alert-frame-${activeAlert.id}`}
+								className={`relative flex flex-col text-white overflow-hidden transition-all duration-300 ${!embedMode ? "w-full h-full rounded-none border-none justify-center" : "w-full rounded-2xl p-4 sm:p-6 gap-3 sm:gap-4"} ${
 									activeAlert.alertStyle === "glass"
 										? `bg-white/[0.03] backdrop-blur-2xl shadow-2xl ${!embedMode ? "" : "border border-white/10"}`
 										: activeAlert.alertStyle === "glitch"
@@ -394,11 +569,10 @@ export default function OBSOverlayView({
 									</div>
 								)}
 
-								{/* Content Top Overlay for OBS mode */}
 								<div
 									className={`relative z-10 flex flex-col ${!embedMode ? "p-4 sm:p-6 bg-gradient-to-b from-black/90 via-black/40 to-transparent pointer-events-none" : ""}`}
 								>
-									{/* Header: User credentials */}
+									{/* User Info */}
 									<div
 										className={`flex items-center gap-3 ${!embedMode ? "mb-3" : ""}`}
 									>
@@ -431,7 +605,7 @@ export default function OBSOverlayView({
 										</div>
 									</div>
 
-									{/* Message Alert text block */}
+									{/* Message text */}
 									{(() => {
 										const cleanedText = activeAlert.text
 											? activeAlert.text
@@ -453,15 +627,9 @@ export default function OBSOverlayView({
 									})()}
 								</div>
 
-								{/* Media Canvas layout frame */}
+								{/* Media Content */}
 								{(() => {
-									const isVertical =
-										activeAlert.mediaUrl.includes("tiktok.com") ||
-										activeAlert.mediaUrl.includes("tiktokcdn.com") ||
-										activeAlert.mediaUrl.includes("tiktokcdn-us.com") ||
-										activeAlert.mediaUrl.includes("instagram.com") ||
-										activeAlert.mediaUrl.includes("shorts");
-
+									const isVertical = isVerticalMedia(activeAlert);
 									const aspectClass = embedMode
 										? isVertical
 											? "aspect-[9/16] w-[auto] max-w-full h-auto max-h-[60vh] sm:max-h-[650px] mx-auto mt-2"
@@ -469,33 +637,42 @@ export default function OBSOverlayView({
 												  activeAlert.type !== "link"
 												? "aspect-video w-full max-h-[75vh] mt-2"
 												: "w-full min-h-[140px] sm:min-h-[220px] max-h-[350px] sm:max-h-[500px] mt-2"
-										: ""; // OBS mode strictly absolute full size
+										: "w-full h-full"; // OBS mode strictly absolute full size
 
 									return (
 										<div
-											className={`${!embedMode ? "absolute inset-0 z-0 w-full h-full flex items-center justify-center overflow-hidden bg-black/80" : "relative rounded-xl mt-2 overflow-hidden bg-black flex items-center justify-center shrink-0 min-w-[280px] sm:min-w-[400px]"} ${aspectClass}`}
+											className={`${!embedMode ? "relative w-full h-full flex items-center justify-center overflow-hidden bg-black/80" : "relative rounded-xl mt-2 overflow-hidden bg-black flex items-center justify-center shrink-0 min-w-[280px] sm:min-w-[400px]"} ${aspectClass}`}
 										>
 											{activeAlert.type === "video" ? (
 												<>
 													<video
+														key={`bg-${activeAlert.id}`}
+														ref={backgroundVideoRef}
 														src={activeAlert.mediaUrl}
 														className="absolute inset-0 w-full h-full object-cover scale-110 blur-[40px] opacity-60 pointer-events-none"
-														autoPlay
 														muted
 														loop
 														playsInline
+														onCanPlay={(e) => {
+															e.currentTarget.play().catch(() => {});
+														}}
 													/>
 													<video
+														key={`main-${activeAlert.id}`}
 														ref={activeVideoRef}
 														src={activeAlert.mediaUrl}
 														className={`w-full h-full block relative z-10 object-contain ${embedMode ? "bg-black" : "bg-transparent drop-shadow-[0_0_2rem_rgba(0,0,0,0.8)]"}`}
 														playsInline
 														controls={false}
-														muted={true}
+														muted={false}
 														autoPlay
 														onEnded={() => onVideoEndedRef.current?.()}
-														onError={() => onVideoErrorRef.current?.()}
+														onError={(e) => {
+															debugMode && console.error("Video Error:", e);
+															onVideoErrorRef.current?.();
+														}}
 														onLoadedMetadata={(e) => {
+															onMediaLoadedRef.current?.();
 															const videoDurationMs =
 																e.currentTarget.duration * 1000;
 															if (videoDurationMs && !isNaN(videoDurationMs)) {
@@ -508,63 +685,63 @@ export default function OBSOverlayView({
 															e.currentTarget
 																.play()
 																.catch((err) =>
-																	console.log("CanPlay auto play catch:", err),
+																	console.log("Auto play catch:", err),
 																);
 														}}
 													/>
 												</>
 											) : activeAlert.type === "react-player" ? (
 												<div
+													key={`player-container-${activeAlert.id}`}
 													className={`w-full h-full border-0 block relative z-10 overflow-hidden ${embedMode ? "bg-black" : ""}`}
 												>
-													{(() => {
-														const PlayerComponent =
-															(ReactPlayer as any).default || ReactPlayer;
-														return (
-															<PlayerComponent
-																ref={reactPlayerRef}
-																url={activeAlert.mediaUrl}
-																playing={true}
-																muted={true}
-																controls={!embedMode}
-																width="100%"
-																height="100%"
-																onReady={() => {
-																	const duration =
-																		reactPlayerRef.current?.getDuration();
-																	if (duration && duration > 0) {
-																		onVideoLoadedMetadataRef.current?.(
-																			duration * 1000,
-																		);
-																	}
-																}}
-																onDurationChange={(duration: any) => {
-																	if (duration && duration > 0) {
-																		onVideoLoadedMetadataRef.current?.(
-																			duration * 1000,
-																		);
-																	}
-																}}
-																onEnded={() => {
-																	onVideoEndedRef.current?.();
-																}}
-																onError={() => {
-																	onVideoErrorRef.current?.();
-																}}
-																config={{
-																	youtube: {
-																		playerVars: {
-																			autoplay: 1,
-																			mute: 1,
-																			controls: embedMode ? 0 : 1,
-																			rel: 1,
-																			playsinline: 1,
-																		},
-																	},
-																}}
-															/>
-														);
-													})()}
+													<ReactPlayerComponent
+														key={`player-${activeAlert.id}`}
+														ref={reactPlayerRef}
+														url={activeAlert.mediaUrl}
+														playing={true}
+														muted={true}
+														controls={false}
+														playsinline={true}
+														width="100%"
+														height="100%"
+														onReady={(player: any) => {
+															onMediaLoadedRef.current?.();
+															const duration = player.getDuration();
+															if (duration && duration > 0) {
+																onVideoLoadedMetadataRef.current?.(
+																	duration * 1000,
+																);
+															}
+														}}
+														onStart={() => {
+															onMediaLoadedRef.current?.();
+														}}
+														onEnded={() => {
+															onVideoEndedRef.current?.();
+														}}
+														onError={(e: any) => {
+															debugMode && console.error(
+																"ReactPlayer Error:",
+																e,
+															);
+															onVideoErrorRef.current?.();
+														}}
+														config={{
+															youtube: {
+																playerVars: {
+																	autoplay: 1,
+																	mute: 1,
+																	controls: 0,
+																	rel: 0,
+																	modestbranding: 1,
+																	playsinline: 1,
+																	origin: window.location.origin,
+																	enablejsapi: 1,
+																},
+															} as any,
+														}}
+													/>
 												</div>
 											) : activeAlert.type === "iframe" ? (
 												<iframe
@@ -575,9 +752,17 @@ export default function OBSOverlayView({
 															: activeAlert.mediaUrl
 													}
 													title="Média Embed"
-													className="w-full h-full border-0 block relative z-10"
+													className={`w-full h-full border-0 block relative z-10 ${
+														activeAlert.provider === "instagram"
+															? "scale-[1.15] origin-top"
+															: ""
+													}`}
+													style={{
+														transform: `scale(${iframeStyle.scale}) translate(${iframeStyle.offsetX}px, ${iframeStyle.offsetY}px)`,
+													}}
 													allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 													allowFullScreen
+													onLoad={() => onMediaLoadedRef.current?.()}
 												/>
 											) : activeAlert.type === "link" ? (
 												<div className="w-full h-full p-4 flex flex-col items-center justify-center relative z-10 bg-slate-950/45 mx-2 text-center select-text">
@@ -630,7 +815,7 @@ export default function OBSOverlayView({
 													/>
 												</>
 											)}
-											{/* Spinning background glow accent for standard neon styles */}
+											{/* Background glow accent for neon styles */}
 											{activeAlert.alertStyle === "neon" && (
 												<div
 													className="absolute inset-0 opacity-15 filter blur-2xl animate-pulse pointer-events-none z-0"
@@ -641,7 +826,7 @@ export default function OBSOverlayView({
 									);
 								})()}
 
-								{/* 4. Progress Countdown Tracker Bar */}
+								{/* Progress Bar */}
 								<div className="absolute bottom-0 left-0 w-full h-2 bg-slate-950/40 pointer-events-none overflow-hidden z-20">
 									<div
 										key={activeAlert.id + "-" + currentDuration}
@@ -661,7 +846,7 @@ export default function OBSOverlayView({
 				);
 			})()}
 
-			{/* Simple debug background label for the web dashboard preview */}
+			{/* Queue status */}
 			{embedMode && queue.length > 0 && (
 				<div className="absolute bottom-3 left-4 text-[10px] font-mono text-slate-400 bg-slate-950/80 px-2.5 py-1 rounded">
 					En attente: {queue.length} alerte(s)
@@ -681,7 +866,3 @@ export default function OBSOverlayView({
 		</div>
 	);
 }
-
-// ==========================================
-// 2. STREAMER ADMIN WORKSPACE (DASHBOARD)
-// ==========================================

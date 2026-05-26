@@ -23,6 +23,15 @@ const commands = [
         .setRequired(false),
     ),
   new SlashCommandBuilder()
+    .setName("random")
+    .setDescription("Trigger a random video alert")
+    .addStringOption((option) =>
+      option
+        .setName("text")
+        .setDescription("Optional text to show on the overlay")
+        .setRequired(false),
+    ),
+  new SlashCommandBuilder()
     .setName("help")
     .setDescription("Show available commands"),
   new SlashCommandBuilder()

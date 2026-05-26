@@ -1,6 +1,6 @@
 {
-	"name": "Discord OBS Overlay",
-	"description": "High-fidelity Discord-to-OBS streamer overlay system offering real-time animated alerts, neon customization, media preloading, and queueing.",
-	"requestFramePermissions": [],
-	"majorCapabilities": []
+  "name": "Discord OBS Overlay",
+  "description": "A simple way to show Discord media on your OBS stream. Features real-time alerts, neon vibes, and built-in safety filters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
