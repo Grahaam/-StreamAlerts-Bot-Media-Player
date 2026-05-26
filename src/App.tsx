@@ -8,7 +8,8 @@ export default function App() {
 
   // Detect if we're on the overlay path
   useEffect(() => {
-    if (window.location.pathname === "/overlay") {
+    const path = window.location.pathname.replace(/\/$/, "");
+    if (path === "/overlay") {
       setIsOverlayPath(true);
     }
   }, []);
