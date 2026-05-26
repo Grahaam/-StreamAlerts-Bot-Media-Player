@@ -1,7 +1,9 @@
 import fs from "fs";
 import path from "path";
+import dotenv from "dotenv";
 
 const SETTINGS_FILE = path.join(process.cwd(), "settings.json");
+const ENV_FILE = path.join(process.cwd(), ".env");
 
 export interface Settings {
   discordToken: string;
@@ -42,15 +44,33 @@ export class SettingsManager {
 
   public loadSettings() {
     try {
+      dotenv.config(); // Reload env
+      
+      let loaded: Partial<Settings> = {};
       if (fs.existsSync(SETTINGS_FILE)) {
         const raw = fs.readFileSync(SETTINGS_FILE, "utf-8");
-        const loaded = JSON.parse(raw);
-        this.settings = { ...defaultSettings, ...loaded };
-        console.log("⚙️ Settings loaded from filesystem.");
-      } else {
+        loaded = JSON.parse(raw);
+      }
+      
+      this.settings = { ...defaultSettings, ...loaded };
+      
+      // Override from .env if present
+      const envToken = process.env.DISCORD_TOKEN;
+      if (envToken) {
+        this.settings.discordToken = envToken.replace(/^"|"$/g, "").trim();
+      }
+
+      // Load cookies from cookies.txt
+      const cookiesFile = path.join(process.cwd(), "cookies.txt");
+      if (fs.existsSync(cookiesFile)) {
+        this.settings.youtubeCookiesContent = fs.readFileSync(cookiesFile, "utf-8");
+      }
+
+      console.log("⚙️ Settings loaded securely (tokens mapped from env).");
+      
+      if (!fs.existsSync(SETTINGS_FILE)) {
         this.saveSettings(this.settings);
       }
-      this.syncCookiesFile();
     } catch (err) {
       console.error("⚠️ Failed to load settings, using defaults.", err);
     }
@@ -58,12 +78,48 @@ export class SettingsManager {
 
   public saveSettings(newSettings: Settings) {
     try {
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(newSettings, null, 2), "utf-8");
+      // 1. Separate sensitive from public
+      const { discordToken, youtubeCookiesContent, ...publicSettings } = newSettings;
+      
+      // 2. Save public things safely to settings.json
+      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(publicSettings, null, 2), "utf-8");
+      
+      // 3. Save discordToken safely to .env
+      this.writeEnvVars({ DISCORD_TOKEN: discordToken });
+      
       this.settings = { ...newSettings };
-      console.log("⚙️ Settings saved successfully.");
+      
+      console.log("⚙️ Settings saved successfully (secrets secured).");
+      
+      // 4. Sycn Cookies to cookies.txt natively
       this.syncCookiesFile();
     } catch (err) {
       console.error("⚠️ Failed to save settings on disk.", err);
+    }
+  }
+
+  private writeEnvVars(vars: Record<string, string>) {
+    try {
+      let envContent = '';
+      if (fs.existsSync(ENV_FILE)) {
+        envContent = fs.readFileSync(ENV_FILE, "utf8");
+      }
+
+      for (const [key, value] of Object.entries(vars)) {
+        const safeValue = `"${value.replace(/"/g, '\\"')}"`;
+        const regex = new RegExp(`^${key}=.*$`, 'm');
+        
+        if (regex.test(envContent)) {
+          envContent = envContent.replace(regex, `${key}=${safeValue}`);
+        } else {
+          envContent += `\n${key}=${safeValue}`;
+        }
+        process.env[key] = value; // Update the live process environment reference
+      }
+      
+      fs.writeFileSync(ENV_FILE, envContent.trim() + "\n", "utf8");
+    } catch (e) {
+      console.error("⚠️ Could not write to .env", e);
     }
   }
 

@@ -698,127 +698,152 @@ export default function StreamerDashboard() {
                     </div>
                   </div>
 
-                  {/* Banned words */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                      Mots-clés filtrés (Banned Words)
-                    </label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        placeholder="Ex: insulte, spam..."
-                        value={bannedWordInput}
-                        onChange={(e) => setBannedWordInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleAddBannedWord()}
-                        className="bg-black/45 flex-1 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-[#e0e0e6] placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
-                      />
-                      <button
-                        onClick={handleAddBannedWord}
-                        className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20"
-                      >
-                        Ajouter
-                      </button>
+                  {/* Custom Local Filters Card */}
+                  <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 flex flex-col gap-6">
+                    <div className="border-b border-white/10 pb-3 mb-1">
+                      <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <ShieldAlert className="w-4 h-4 text-rose-400" />
+                        Filtre Textuel Local
+                      </h3>
+                      <p className="text-[11px] text-white/40 mt-1">Filtre additionnel exécuté par l'application si l'AutoMod Discord laisse passer.</p>
                     </div>
-                    {config.bannedWords.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {config.bannedWords.map((word) => (
-                          <span
-                            key={word}
-                            className="bg-rose-950/40 text-rose-300 border border-rose-900/50 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-2"
-                          >
-                            {word}
-                            <button
-                              onClick={() => handleRemoveBannedWord(word)}
-                              className="w-4 h-4 hover:bg-rose-900/60 rounded-full flex items-center justify-center transition"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </span>
-                        ))}
+
+                    {/* Banned words */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                        Mots-clés filtrés (Banned Words)
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Ex: insulte, spam..."
+                          value={bannedWordInput}
+                          onChange={(e) => setBannedWordInput(e.target.value)}
+                          onKeyDown={(e) => e.key === "Enter" && handleAddBannedWord()}
+                          className="bg-black/45 flex-1 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono text-[#e0e0e6] placeholder:text-white/20 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-all duration-300"
+                        />
+                        <button
+                          onClick={handleAddBannedWord}
+                          className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 rounded-xl text-sm font-bold transition-all shadow-lg shadow-indigo-500/20"
+                        >
+                          Ajouter
+                        </button>
                       </div>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-1.5 mt-2">
-                    <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                      Action sur les mots interdits
-                    </label>
-                    <div className="flex bg-black/45 border border-white/10 rounded-xl p-1 shrink-0">
-                      <button
-                        onClick={() => setConfig({ ...config, bannedWordsAction: "block" })}
-                        className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${
-                          config.bannedWordsAction === "block" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/80"
-                        }`}
-                      >
-                        Bloquer l'alerte
-                      </button>
-                      <button
-                        onClick={() => setConfig({ ...config, bannedWordsAction: "censor" })}
-                        className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${
-                          config.bannedWordsAction === "censor" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/80"
-                        }`}
-                      >
-                        Censurer (* * *)
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                        Bloquer tous les liens externes
-                      </label>
-                      <button
-                        onClick={() => setConfig({ ...config, blockLinks: !config.blockLinks })}
-                        className={`p-4 rounded-xl border text-left flex gap-3 transition-all duration-300 ${
-                          config.blockLinks
-                            ? "bg-rose-500/10 border-rose-500/50 text-rose-300"
-                            : "bg-black/45 border-white/10 text-white/45 hover:bg-white/5 hover:text-white/80"
-                        }`}
-                      >
-                        <Shield className="w-5 h-5 shrink-0" />
-                        <div>
-                          <span className="font-bold block text-sm">Bloquer les liens</span>
-                          <span className="text-[10px] opacity-70 mt-1 block">Refuse tout message contenant une URL (sauf médias).</span>
+                      {config.bannedWords.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {config.bannedWords.map((word) => (
+                            <span
+                              key={word}
+                              className="bg-rose-950/40 text-rose-300 border border-rose-900/50 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-2"
+                            >
+                              {word}
+                              <button
+                                onClick={() => handleRemoveBannedWord(word)}
+                                className="w-4 h-4 hover:bg-rose-900/60 rounded-full flex items-center justify-center transition"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </span>
+                          ))}
                         </div>
-                      </button>
+                      )}
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
+                    <div className="flex flex-col gap-2">
                       <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                        Bloquer médias sensibles (Spoilers)
+                        Action sur les mots interdits
                       </label>
-                      <button
-                        onClick={() => setConfig({ ...config, blockNSFW: !config.blockNSFW })}
-                        className={`p-4 rounded-xl border text-left flex gap-3 transition-all duration-300 ${
-                          config.blockNSFW
-                            ? "bg-rose-500/10 border-rose-500/50 text-rose-300"
-                            : "bg-black/45 border-white/10 text-white/45 hover:bg-white/5 hover:text-white/80"
-                        }`}
-                      >
-                        <ShieldAlert className="w-5 h-5 shrink-0" />
-                        <div>
-                          <span className="font-bold block text-sm">Bloquer les Spoilers</span>
-                          <span className="text-[10px] opacity-70 mt-1 block">Bloque les médias marqués comme "spoiler" sur Discord.</span>
-                        </div>
-                      </button>
+                      <div className="flex bg-black/45 border border-white/10 rounded-xl p-1 shrink-0">
+                        <button
+                          onClick={() => setConfig({ ...config, bannedWordsAction: "block" })}
+                          className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${
+                            config.bannedWordsAction === "block" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/80"
+                          }`}
+                        >
+                          Bloquer l'alerte
+                        </button>
+                        <button
+                          onClick={() => setConfig({ ...config, bannedWordsAction: "censor" })}
+                          className={`flex-1 py-2 text-sm font-bold rounded-lg transition ${
+                            config.bannedWordsAction === "censor" ? "bg-white/10 text-white" : "text-white/40 hover:text-white/80"
+                          }`}
+                        >
+                          Censurer (* * *)
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
-                      Cooldown entre les alertes (Secondes)
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={config.cooldownSeconds || 0}
-                      onChange={(e) => setConfig({ ...config, cooldownSeconds: Number(e.target.value) })}
-                      className="bg-black/45 w-full border border-white/10 rounded-xl px-4 py-3 text-sm text-[#e0e0e6] focus:outline-none focus:border-indigo-500 transition-all"
-                    />
-                    <span className="text-[10px] text-white/30">
-                      Un utilisateur ne pourra pas renvoyer d'alerte pendant cette durée. Mettre à 0 pour désactiver.
-                    </span>
+                  {/* Anti spam limits */}
+                  <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-5 flex flex-col gap-6">
+                    <div className="border-b border-white/10 pb-3 mb-1">
+                      <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-indigo-400" />
+                        Contrôle Anti-Spam & Abus
+                      </h3>
+                      <p className="text-[11px] text-white/40 mt-1">Limitez les abus concernant la fréquence ou le contenu des demandes.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                          Bloquer les liens externes
+                        </label>
+                        <button
+                          onClick={() => setConfig({ ...config, blockLinks: !config.blockLinks })}
+                          className={`p-4 rounded-xl border text-left flex gap-3 transition-all duration-300 h-full ${
+                            config.blockLinks
+                              ? "bg-rose-500/10 border-rose-500/50 text-rose-300"
+                              : "bg-black/45 border-white/10 text-white/45 hover:bg-white/5 hover:text-white/80"
+                          }`}
+                        >
+                          <Shield className="w-5 h-5 shrink-0 mt-0.5" />
+                          <div>
+                            <span className="font-bold block text-sm">Liens Externes</span>
+                            <span className="text-[10.5px] opacity-70 mt-1 block leading-relaxed">Bloque tout message contenant une URL (hormis l'URL du média lui-même).</span>
+                          </div>
+                        </button>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                          Bloquer les médias Spoilers
+                        </label>
+                        <button
+                          onClick={() => setConfig({ ...config, blockNSFW: !config.blockNSFW })}
+                          className={`p-4 rounded-xl border text-left flex gap-3 transition-all duration-300 h-full ${
+                            config.blockNSFW
+                              ? "bg-rose-500/10 border-rose-500/50 text-rose-300"
+                              : "bg-black/45 border-white/10 text-white/45 hover:bg-white/5 hover:text-white/80"
+                          }`}
+                        >
+                          <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5" />
+                          <div>
+                            <span className="font-bold block text-sm">Filtre Spoilers</span>
+                            <span className="text-[10.5px] opacity-70 mt-1 block leading-relaxed">Refuse automatiquement les pièces jointes marquées comme "spoiler" sur Discord.</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+                      <label className="text-xs font-bold text-white/50 uppercase tracking-widest font-mono">
+                        Délai entre chaque alerte (Cooldown par utilisateur)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min={0}
+                          value={config.cooldownSeconds || 0}
+                          onChange={(e) => setConfig({ ...config, cooldownSeconds: Number(e.target.value) })}
+                          className="bg-black/45 w-full border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm font-bold text-[#e0e0e6] focus:outline-none focus:border-indigo-500 transition-all font-mono"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 text-xs font-bold">SEC</span>
+                      </div>
+                      <span className="text-[10.5px] text-white/40 mt-1">
+                        Temps qu'un même utilisateur doit attendre avant de pouvoir renvoyer une nouvelle alerte. À 0, le délai est désactivé.
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
