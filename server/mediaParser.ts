@@ -66,12 +66,10 @@ export async function resolveMediaFromLink(url: string): Promise<{ type: "image"
     lowercaseUrl.includes("x.com")
   ) {
     try {
-      // console.log(`[yt-dlp] Checking: ${url}`);
+      console.log(`[yt-dlp] Extracting video: ${url}`);
       
       const cacheDir = path.join(process.cwd(), "media_cache");
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir, { recursive: true });
-      }
+      if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
       
       const hash = crypto.createHash("md5").update(url).digest("hex");
       const filename = `${hash}.mp4`;
@@ -96,18 +94,18 @@ export async function resolveMediaFromLink(url: string): Promise<{ type: "image"
           const downloadOpts = { ...dlOptions };
           delete downloadOpts.dumpSingleJson;
           downloadOpts.output = filepath;
-          downloadOpts.format = "best[ext=mp4]/best";
-          // console.log(`[yt-dlp] Downloading: ${url}`);
+          downloadOpts.format = "best[ext=mp4]/best"; 
+          console.log(`[yt-dlp] Downloading to cache: ${filename}`);
           try {
             await youtubedl(url, downloadOpts);
-            // console.log(`[yt-dlp] Saved to cache: ${filename}`);
+            console.log(`[yt-dlp] Download finished: ${filename}`);
           } catch (dlErr: any) {
-            console.error(`[yt-dlp] Download failed:`, dlErr.message);
-            // fs.appendFileSync(path.join(process.cwd(), "proxy-debug.log"), `\n[yt-dlp] Download error: ${dlErr.message}\n`);
+            console.error(`[yt-dlp] Download error:`, dlErr.message);
+            fs.appendFileSync(path.join(process.cwd(), "proxy-debug.log"), `\n[yt-dlp] Download error: ${dlErr.message}\n`);
             throw dlErr;
           }
         } else {
-          // console.log(`[yt-dlp] Using cached version: ${filename}`);
+          console.log(`[yt-dlp] Using cached video: ${filename}`);
         }
 
         if (fs.existsSync(filepath)) {
@@ -116,8 +114,8 @@ export async function resolveMediaFromLink(url: string): Promise<{ type: "image"
         }
       }
     } catch (err: any) {
-      console.warn("[MediaParser] yt-dlp extraction/download failed:", err.message);
-      outputYtError = err.message || "yt-dlp default fallback error";
+      console.warn("[MediaParser] yt-dlp failed:", err.message);
+      outputYtError = err.message || "yt-dlp error";
     }
   }
 
@@ -131,9 +129,8 @@ export async function resolveMediaFromLink(url: string): Promise<{ type: "image"
       timeout: 3000,
       followRedirects: "follow",
       headers: {
-        "user-agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-      },
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+      }
     }) as any;
 
     if (preview) {

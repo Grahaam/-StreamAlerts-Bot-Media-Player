@@ -50,13 +50,13 @@
   }
 }
 
-/* Smooth background transparency specifically for OBS browser source layers */
+/* OBS background transparency */
 html, body {
   background-color: transparent !important;
   color-scheme: dark;
 }
 
-/* Particle animation system */
+/* particles */
 @keyframes sparkle-float {
   0% {
     transform: translate(0, 0) scale(0);
@@ -78,7 +78,7 @@ html, body {
   animation: sparkle-float var(--p-dur, 2s) ease-out var(--p-delay, 0s) infinite;
 }
 
-/* Linear countdown Timer animation */
+/* timer bar */
 @keyframes timer-shrink {
   from { width: 100%; }
   to { width: 0%; }
@@ -88,7 +88,7 @@ html, body {
   animation: timer-shrink var(--timer-duration, 8s) linear forwards;
 }
 
-/* Retro CRT lines overlay for secondary cyberpunk effects */
+/* crt effect */
 .crt-overlay {
   position: relative;
 }

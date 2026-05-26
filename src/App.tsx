@@ -6,7 +6,7 @@ import "./types";
 export default function App() {
   const [isOverlayPath, setIsOverlayPath] = useState(false);
 
-  // Detect if we're on the overlay path
+  // Parse path at boot
   useEffect(() => {
     const path = window.location.pathname.replace(/\/$/, "");
     if (path === "/overlay") {

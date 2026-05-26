@@ -1,3 +1,3 @@
 #!/bin/bash
-echo "🚀 Starting StreamAlerts Hub..."
+echo "Starting StreamAlerts Hub..."
 npm start

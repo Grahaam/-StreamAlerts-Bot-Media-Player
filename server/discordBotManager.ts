@@ -22,7 +22,7 @@ export class DiscordBotManager {
 
     this.status = "connecting";
     this.errorMsg = "";
-    console.log(`[Discord] Connecting to channel: ${channelId}...`);
+    console.log(`[Discord] Logging in for channel: ${channelId}...`);
 
     try {
       this.client = new Client({
@@ -37,7 +37,7 @@ export class DiscordBotManager {
         this.status = "connected";
         this.botUser = this.client?.user?.tag || "Unknown Bot";
         this.errorMsg = "";
-        // console.log(`[Discord] Logged in as ${this.botUser}`);
+        console.log(`[Discord] Connected as ${this.botUser}`);
       });
 
       this.client.on("error", (err) => {
@@ -57,14 +57,14 @@ export class DiscordBotManager {
             const now = Date.now();
             const diff = (now - lastTime) / 1000;
             if (diff < cooldown) {
-              console.warn(`[Discord] Rate limiting ${message.author.username}`);
+              console.warn(`[Discord] Cooldown active for ${message.author.username}`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
                 type: "image",
                 mediaUrl: "",
                 status: "blocked",
-                reason: `Cooldown (${Math.ceil(cooldown - diff)}s left)`,
+                reason: `Cooldown (wait ${Math.ceil(cooldown - diff)}s)`,
               });
               return;
             }
@@ -81,14 +81,14 @@ export class DiscordBotManager {
           if (attachment) {
             const sizeMB = attachment.size / (1024 * 1024);
             if (sizeMB > settingsManager.settings.mediaMaxSizeMB) {
-              console.warn(`[Discord] File too large: ${sizeMB.toFixed(2)}MB`);
+              console.warn(`[Discord] File too large (${sizeMB.toFixed(1)}MB)`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
                 type: "image",
                 mediaUrl: attachment.url,
                 status: "blocked",
-                reason: `File too large (${sizeMB.toFixed(2)}MB > ${settingsManager.settings.mediaMaxSizeMB}MB limit)`,
+                reason: `File too large (${sizeMB.toFixed(1)}MB > ${settingsManager.settings.mediaMaxSizeMB}MB)`,
               });
               return;
             }
@@ -117,14 +117,14 @@ export class DiscordBotManager {
               resolvedType = "video";
               mediaUrl = attachment.url;
             } else {
-              console.warn(`[Discord] Unsupported format: ${mime}`);
+              console.warn(`[Discord] Unsupported file type: ${mime}`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
                 type: "image",
                 mediaUrl: attachment.url,
                 status: "blocked",
-                reason: `Unsupported format: ${mime || "unknown extension"}`,
+                reason: `Unsupported format: ${mime || "unknown"}`,
               });
               return;
             }
@@ -148,14 +148,14 @@ export class DiscordBotManager {
 
           const textCheck = processBannedWords(message.content);
           if (textCheck.wasBlocked) {
-            console.warn(`[Discord] Banned word from ${message.author.username}`);
+            console.warn(`[Discord] Message from ${message.author.username} blocked (banned word)`);
             logManager.addLog({
               author: message.author.username,
               text: message.content,
               type: resolvedType,
               mediaUrl: mediaUrl,
               status: "blocked",
-              reason: "Banned words found",
+              reason: "Blocked (banned words)",
             });
             return;
           }
@@ -164,7 +164,6 @@ export class DiscordBotManager {
           const urlRegex = /(https?:\/\/[^\s]+)/gi;
           const matches = finalText.match(urlRegex) || [];
 
-          // Strip the media link if it's the only thing there
           if (matches.length > 0 && message.attachments.size === 0) {
             finalText = finalText.replace(matches[0], "").trim();
           }
@@ -173,14 +172,14 @@ export class DiscordBotManager {
             const remainingMatches = finalText.match(urlRegex) || [];
             
             if (remainingMatches.length > 0) {
-              console.warn(`[Discord] Extra links from ${message.author.username}`);
+              console.warn(`[Discord] Message from ${message.author.username} blocked (extra links)`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
                 type: resolvedType,
                 mediaUrl: mediaUrl,
                 status: "blocked",
-                reason: "Extra links not allowed",
+                reason: "Links not allowed",
               });
               return;
             }
@@ -191,14 +190,14 @@ export class DiscordBotManager {
             const hasNSFWText = finalText.toLowerCase().includes("nsfw");
 
             if (hasSpoilerAttachment || hasNSFWText) {
-              console.warn(`[Discord] NSFW detected from ${message.author.username}`);
+              console.warn(`[Discord] Message from ${message.author.username} blocked (NSFW/Spoiler)`);
               logManager.addLog({
                 author: message.author.username,
                 text: message.content,
                 type: resolvedType,
                 mediaUrl: mediaUrl,
                 status: "blocked",
-                reason: "NSFW filter triggered",
+                reason: "NSFW/Spoiler detected",
               });
               return;
             }
@@ -227,14 +226,14 @@ export class DiscordBotManager {
             type: alertPayload.type,
             mediaUrl: alertPayload.mediaUrl,
             status: textCheck.wasCensored ? "censored" : "approved",
-            reason: alertPayload.ytDlpError ? `yt-dlp fallback: ${alertPayload.ytDlpError.substring(0, 100).replace(/\n/g, " ")}` : (textCheck.wasCensored ? "Censored" : "Approved"),
+            reason: alertPayload.ytDlpError ? `Iframe fallback (yt-dlp error: ${alertPayload.ytDlpError.substring(0, 50)}...)` : (textCheck.wasCensored ? "Text censored" : "Approved"),
           });
 
           globalThis.io.emit("new_alert", alertPayload);
-          // console.log(`[Alerts] New alert from ${alertPayload.authorName}`);
+          console.log(`[Alerts] New alert from ${alertPayload.authorName}`);
 
         } catch (msgErr) {
-          console.error("[Discord] Error handling message:", msgErr);
+          console.error("[Discord] Message handler error:", msgErr);
         }
       });
 
@@ -242,7 +241,7 @@ export class DiscordBotManager {
     } catch (err: any) {
       console.error("[Discord] Login failed:", err);
       this.status = "error";
-      this.errorMsg = err.message || "Login failed";
+      this.errorMsg = err.message || "Failed to login";
       this.botUser = "";
     }
   }

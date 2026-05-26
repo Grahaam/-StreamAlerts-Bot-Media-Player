@@ -1,5 +1,6 @@
 import express from "express";
-import http, { createServer as createHttpServer } from "http";
+import { createServer as createHttpServer } from "http";
+import http from "http";
 import https from "https";
 import { Server as SocketServer } from "socket.io";
 import { createServer as createViteServer } from "vite";
@@ -15,7 +16,7 @@ dotenv.config();
 
 const PORT = 3000;
 
-// Server setup
+// Setup server and express endpoints
 async function runServer() {
   settingsManager.loadSettings();
 
@@ -24,7 +25,7 @@ async function runServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   const httpServer = createHttpServer(app);
-  // Socket.io
+  // Configure socket.io
   const io = new SocketServer(httpServer, {
     cors: {
       origin: "*",
@@ -32,17 +33,17 @@ async function runServer() {
     },
   });
 
-  // Global emitter for bot manager
+  // Share overlay emitter with bots
   globalThis.io = io;
 
-  // Connect bot if we have settings
+  // Lazily connect bot if settings loaded token
   if (settingsManager.settings.discordToken && settingsManager.settings.channelId) {
     botManager.connectBot(settingsManager.settings.discordToken, settingsManager.settings.channelId).catch(() => {});
   }
 
-  // Get settings
+  // API - Get current Configuration Settings
   app.get("/api/settings", (req, res) => {
-    // Mask token
+    // Mask token before sending
     const safeSettings = {
       ...settingsManager.settings,
       discordToken: settingsManager.settings.discordToken ? "••••••••••••••••••••" : "",
@@ -50,7 +51,7 @@ async function runServer() {
     res.json(safeSettings);
   });
 
-  // Save settings
+  // API - Save Configuration Settings
   app.post("/api/settings", async (req, res) => {
     try {
       const incoming = req.body;
@@ -72,12 +73,12 @@ async function runServer() {
 
       settingsManager.saveSettings(updatedSettings);
 
-      // Reconnect bot if settings changed
+      // Trigger bot reconnect if token or channel changed
       if (
         updatedSettings.discordToken !== originalToken ||
         updatedSettings.channelId !== originalChannel
       ) {
-        console.log("[Server] Settings changed, reconnecting Discord bot...");
+        console.log("[Server] Token or Channel ID altered: re-initialising Discord worker...");
         botManager.connectBot(updatedSettings.discordToken, updatedSettings.channelId).catch(() => {});
       }
 
@@ -86,21 +87,22 @@ async function runServer() {
         discordToken: updatedSettings.discordToken ? "••••••••••••••••••••" : "",
       }});
     } catch (err: any) {
-      res.status(500).json({ error: err.message || "Failed to save settings" });
+      res.status(500).json({ error: err.message || "Failed storing configurations" });
     }
   });
 
-  // Logs
+  // API - Get Logs List
   app.get("/api/logs", (req, res) => {
     res.json(logManager.logs);
   });
 
+  // API - Clear Logs
   app.post("/api/logs/clear", (req, res) => {
     logManager.clearLogs();
     res.json({ success: true });
   });
 
-  // Bot status
+  // API - Get Discord status
   app.get("/api/bot-status", (req, res) => {
     res.json({
       status: botManager.status,
@@ -109,16 +111,17 @@ async function runServer() {
     });
   });
 
+  // API - Reconnect bot manually
   app.post("/api/bot-reconnect", async (req, res) => {
     try {
       await botManager.connectBot(settingsManager.settings.discordToken, settingsManager.settings.channelId);
       res.json({ success: true, status: botManager.status });
     } catch (err: any) {
-      res.status(500).json({ error: err.message || "Failed to reconnect" });
+      res.status(500).json({ error: err.message || "Reconnect triggered failure." });
     }
   });
 
-  // Test alert
+  // API - Trigger a Test simulation event
   app.post("/api/trigger-test", (req, res) => {
     const { authorName, text, type, mediaUrl, alertStyle, neonColor, duration } = req.body;
 
@@ -126,7 +129,7 @@ async function runServer() {
       id: "test_" + Math.random().toString(36).substring(2, 11),
       authorName: authorName || "Viewer_Random_99",
       authorAvatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=128&q=80",
-      text: text || "Check out this clip!",
+      text: text || "Regardez ce clip que je viens de faire sur le stream !",
       mediaUrl: mediaUrl || "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1280&auto=format&fit=crop",
       type: type || "image",
       duration: duration || settingsManager.settings.alertDuration,
@@ -141,15 +144,16 @@ async function runServer() {
     res.json({ success: true, payload: testPayload });
   });
 
-  // Skip alert
+  // API - Skip the currently playing alert
   app.post("/api/skip-alert", (req, res) => {
     io.emit("skip_alert");
     res.json({ success: true });
   });
 
-  // Serve cached media
+  // API - Serve locally cached media files downloaded by yt-dlp
   app.get("/api/media-cache/:filename", (req, res) => {
     const filename = req.params.filename;
+    // ensure no directory traversal
     if (filename.includes("..") || filename.includes("/")) {
        return res.status(400).send("Invalid filename");
     }
@@ -158,10 +162,11 @@ async function runServer() {
       return res.status(404).send("File not found");
     }
     
+    // Serve video with range requests support using express statics/sendfile logic:
     res.sendFile(filepath);
   });
 
-  // Queue management
+  // API - Proxy Media to bypass CORS and Referer restrictions
   app.post("/api/queue/force-update", (req, res) => {
     io.emit("force_queue_update", req.body.queue);
     res.json({ success: true });
@@ -172,7 +177,6 @@ async function runServer() {
     res.json({ success: true });
   });
 
-  // Proxy media to bypass CORS
   app.get("/api/proxy-media", (req, res) => {
     const targetUrl = req.query.url as string;
     if (!targetUrl) return res.status(400).send("No URL provided");
@@ -203,31 +207,31 @@ async function runServer() {
       options.headers["Range"] = req.headers.range;
     }
 
-    // const logFile = path.resolve(process.cwd(), "proxy-debug.log");
-    // const log = (msg: string) => {
-    //    console.log(msg);
-    //    fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\n`);
-    // };
+    const logFile = path.resolve(process.cwd(), "proxy-debug.log");
+    const log = (msg: string) => {
+       console.log(msg);
+       fs.appendFileSync(logFile, `[${new Date().toISOString()}] ${msg}\n`);
+    };
 
-    // log(`[Proxy Media] Requesting: ${targetUrl}`);
-    // log(`[Proxy Media] Headers sent: ${JSON.stringify(options.headers)}`);
+    log(`[Proxy Media] Requesting: ${targetUrl}`);
+    log(`[Proxy Media] Headers sent: ${JSON.stringify(options.headers)}`);
 
     const proxyReq = client.get(targetUrl, options, (proxyRes: any) => {
-      // log(`[Proxy Media] Response from target: ${proxyRes.statusCode}`);
-      // log(`[Proxy Media] Response headers: ${JSON.stringify(proxyRes.headers)}`);
+      log(`[Proxy Media] Response from target: ${proxyRes.statusCode}`);
+      log(`[Proxy Media] Response headers: ${JSON.stringify(proxyRes.headers)}`);
 
       if (proxyRes.statusCode === 403 || proxyRes.statusCode >= 400) {
-         // let body = "";
-         // proxyRes.on('data', (c: any) => body += c);
-         // proxyRes.on('end', () => {
-         //    log(`[Proxy Media Error Body 403]: ${body.substring(0, 1000)}`);
-         // });
+         let body = "";
+         proxyRes.on('data', (c: any) => body += c);
+         proxyRes.on('end', () => {
+            log(`[Proxy Media Error Body 403]: ${body.substring(0, 1000)}`);
+         });
       }
 
       // Handle redirects
       if ([301, 302, 303, 307, 308].includes(proxyRes.statusCode)) {
         let redirectUrl = proxyRes.headers.location;
-        // console.log(`[Proxy Media] Redirecting to: ${redirectUrl?.substring(0, 100)}...`);
+        console.log(`[Proxy Media] Redirecting to: ${redirectUrl?.substring(0, 100)}...`);
         if (redirectUrl) {
            if (!redirectUrl.startsWith('http')) {
               redirectUrl = new URL(redirectUrl, targetUrl).toString();
@@ -286,17 +290,18 @@ async function runServer() {
     });
   }
 
-  // Start server
+  // Start the composite Server
   httpServer.listen(PORT, "0.0.0.0", () => {
-    console.log(`[Server] OBS overlay server running on port ${PORT}`);
+    console.log(`[Server] Stream OBS server active on port ${PORT}`);
+    console.log(`[Server] WebSocket server mapped. Client connections ready.`);
   });
 }
 
-// Global socket emitter
+// Global scope Socket emitter representation helper
 declare global {
   var io: SocketServer;
 }
 
 runServer().catch((err) => {
-  console.error("Fatal error starting server:", err);
+  console.error("FATAL: Failed to initiate unified application container", err);
 });

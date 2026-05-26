@@ -44,7 +44,7 @@ export class SettingsManager {
 
   public loadSettings() {
     try {
-      dotenv.config(); // Reload env
+      dotenv.config();
       
       let loaded: Partial<Settings> = {};
       if (fs.existsSync(SETTINGS_FILE)) {
@@ -54,44 +54,42 @@ export class SettingsManager {
       
       this.settings = { ...defaultSettings, ...loaded };
       
-      // Override from .env if present
       const envToken = process.env.DISCORD_TOKEN;
-      if (envToken && envToken !== "YOUR_DISCORD_TOKEN") {
+      if (envToken) {
         this.settings.discordToken = envToken.replace(/^"|"$/g, "").trim();
       }
 
-      // Load cookies from cookies.txt
       const cookiesFile = path.join(process.cwd(), "cookies.txt");
       if (fs.existsSync(cookiesFile)) {
-        this.settings.youtubeCookiesContent = fs.readFileSync(
-          cookiesFile,
-          "utf-8",
-        );
+        this.settings.youtubeCookiesContent = fs.readFileSync(cookiesFile, "utf-8");
       }
 
-      console.log("[Settings] Settings loaded");
+      console.log("[Settings] Loaded (tokens from env)");
       
       if (!fs.existsSync(SETTINGS_FILE)) {
         this.saveSettings(this.settings);
       }
     } catch (err) {
-      console.error("[Settings] Error loading settings:", err);
+      console.error("[Settings] Load error (using defaults)", err);
     }
   }
 
   public saveSettings(newSettings: Settings) {
     try {
+      // split sensitive from public
       const { discordToken, youtubeCookiesContent, ...publicSettings } = newSettings;
       
       fs.writeFileSync(SETTINGS_FILE, JSON.stringify(publicSettings, null, 2), "utf-8");
+      
       this.writeEnvVars({ DISCORD_TOKEN: discordToken });
       
       this.settings = { ...newSettings };
+      
+      console.log("[Settings] Saved successfully");
+      
       this.syncCookiesFile();
-
-      console.log("[Settings] Settings saved");
     } catch (err) {
-      console.error("[Settings] Error saving settings:", err);
+      console.error("[Settings] Save error", err);
     }
   }
 
@@ -111,12 +109,12 @@ export class SettingsManager {
         } else {
           envContent += `\n${key}=${safeValue}`;
         }
-        process.env[key] = value; // Update the live process environment reference
+        process.env[key] = value;
       }
       
       fs.writeFileSync(ENV_FILE, envContent.trim() + "\n", "utf8");
     } catch (e) {
-      console.error("[Settings] Could not write to .env", e);
+      console.error("[Settings] Env write error", e);
     }
   }
 
@@ -134,12 +132,12 @@ export class SettingsManager {
 
       let finalContent = content;
       if (!finalContent.includes("# Netscape HTTP Cookie File")) {
-        finalContent = "# Netscape HTTP Cookie File\n# This is a generated file! Do not edit.\n\n" + finalContent;
+        finalContent = "# Netscape HTTP Cookie File\n# Generated file - modifications will be overwritten\n\n" + finalContent;
       }
       
       fs.writeFileSync(cookiesFile, finalContent, "utf-8");
     } catch (err) {
-      console.error("[Settings] Failed to sync cookies.txt.", err);
+      console.error("[Settings] Cookie sync error", err);
     }
   }
 }

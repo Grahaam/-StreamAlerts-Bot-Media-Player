@@ -1,52 +1,54 @@
 # StreamAlerts Hub
 
-StreamAlerts Hub is a direct bridge between Discord and OBS. It captures media (videos, images, links) from a specific Discord channel and displays them as alerts on your stream in real-time.
+StreamAlerts Hub est une application pour les streamers permettant de récupérer des médias (vidéos, images, liens) depuis un salon Discord et de les afficher automatiquement en direct via OBS.
+
+## Prérequis
+
+Assurez-vous d'avoir installé les logiciels suivants sur votre machine :
+- **[Node.js](https://nodejs.org/fr/)** (version 18 ou supérieure recommandée)
+- Assurez-vous que la commande `npm` est disponible dans votre terminal.
+
+## Installation
+
+L'application inclut des scripts automatisés pour l'installation.
+
+### Pour Windows
+1. Double-cliquez sur le fichier `install.bat`.
+2. Attendez la fin de l'installation des dépendances.
+
+### Pour macOS / Linux
+1. Ouvrez un terminal dans le dossier du projet.
+2. Rendez le script d'installation exécutable (si nécessaire) : `chmod +x install.sh`
+3. Exécutez le script : `./install.sh`
+
+*(Alternativement, exécutez `npm install` puis `npm run build` manuellement dans le terminal).*
+
+## Lancement de l'application
+
+Une fois l'installation terminée, vous pouvez démarrer l'application.
+
+### Pour Windows
+- Double-cliquez sur `start.bat`.
+
+### Pour macOS / Linux
+- Exécutez `./start.sh` dans votre terminal.
+- *(Ou lancez manuellement `npm start`).*
+
+Le serveur démarrera localement. Vous pourrez accéder au panneau d'administration depuis votre navigateur à l'adresse **http://localhost:3000** (l'URL exacte sera affichée dans le terminal).
+
+## Configuration initiale
+
+Lors de votre première connexion, la page d'accueil vous guidera à travers la configuration :
+
+1. **Liaison Discord** : Allez dans l'onglet Bot Discord. Renseignez l'ID du salon textuel et le Token du Bot.
+2. **OBS Studio** : Dans la section Overlay OBS, copiez l'URL fournie.
+3. Allez dans OBS, ajoutez une nouvelle **Source Navigateur (Browser Source)**.
+4. Collez l'URL.
+5. Ajustez la taille (ex: 1920x1080) selon la résolution souhaitée.
+
+## Tester l'overlay
+
+Vous pouvez utiliser le bouton de simulation dans le panneau de configuration pour envoyer une alerte de test sur l'overlay et vérifier le rendu sur OBS.
 
 ---
-
-## ⚡️ Quick Start
-
-### 1. Prerequisites
-- **[Node.js](https://nodejs.org/)** (v18 or higher)
-- **Discord Bot Token**: You'll need a bot with `GuildMessages` and `MessageContent` intents enabled.
-- **OBS Studio**: To display the overlay.
-
-### 2. Setup
-Run the installer for your operating system:
-
-- **Windows**: Double-click `install.bat`
-- **macOS / Linux**: Run `./install.sh` (you might need `chmod +x install.sh` first)
-
-*Manual setup: `npm install && npm run build`*
-
-### 3. Configuration
-1. Create a `.env.local` file in the root directory (you can copy `.env.local` if it exists and fill in your details):
-   ```env
-   DISCORD_TOKEN=your_bot_token_here
-   APPLICATION_ID=your_client_id_here
-   ```
-2. Run the application:
-   - **Windows**: Double-click `start.bat`
-   - **macOS / Linux**: Run `./start.sh`
-   - *Manual: `npm run start` (production) or `npm run dev` (development)*
-
-3. Open your browser and go to **http://localhost:3000**.
-
-### 4. OBS Integration
-1. In the **StreamAlerts Hub** dashboard, go to the **Overlay OBS** section and copy the unique URL.
-2. In **OBS Studio**, add a new **Browser Source**.
-3. Paste the URL, set the resolution to **1920x1080** (or your stream's resolution), and check "Shutdown source when not visible" and "Refresh browser when scene becomes active" if desired.
-4. **Test it**: Use the "Trigger Test Alert" button in the dashboard to verify the connection.
-
----
-
-## ⚙️ How it Works
-- The application monitors a Discord channel for new messages containing media or links.
-- Supported media: Images, Videos (Direct links, YouTube, TikTok, Instagram, etc.), and Link Previews.
-- Alerts are queued and displayed one by one on the OBS overlay.
-- You can manage the queue, skip alerts, or clear history from the dashboard.
-
----
-
-## 🇫🇷 Note pour les utilisateurs francophones
-L'interface est disponible en français. Une fois le serveur lancé, vous retrouverez toutes les instructions directement dans le tableau de bord.
+*Fourni avec les sources.*
